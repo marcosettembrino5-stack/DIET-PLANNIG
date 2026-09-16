@@ -14,3 +14,6 @@ desktop.ini
 # Dipendenze / build (non usate ora, ma per sicurezza)
 node_modules/
 dist/
+
+# Google App Engine generated folder
+appengine-generated/
