@@ -1,0 +1,16 @@
+# Documenti privati con dati personali (NON pubblicare)
+*.docx
+*.pdf
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Dipendenze / build (non usate ora, ma per sicurezza)
+node_modules/
+dist/

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#2e7d5b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>NutriApp</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-logo">🥗</span>
+        <span class="brand-name">NutriApp</span>
+      </div>
+      <select id="profileSelect" class="profile-select" aria-label="Scegli profilo"></select>
+    </div>
+  </header>
+
+  <!-- CONTENUTO -->
+  <main id="app" class="app-main">
+
+    <!-- TAB: OGGI -->
+    <section id="tab-oggi" class="tab-panel active">
+      <div class="day-bar">
+        <button id="prevDay" class="day-nav" aria-label="Giorno precedente">‹</button>
+        <div class="day-label">
+          <span id="dayDate">Oggi</span>
+          <small id="dayMeta"></small>
+        </div>
+        <button id="nextDay" class="day-nav" aria-label="Giorno successivo">›</button>
+      </div>
+
+      <div id="freeMealBanner" class="free-meal-banner hidden"></div>
+
+      <div id="progressCard" class="progress-card">
+        <div class="progress-ring-wrap">
+          <div class="progress-num"><span id="mealsDone">0</span>/<span id="mealsTotal">5</span></div>
+          <div class="progress-sub">pasti completati</div>
+        </div>
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+
+      <div id="mealsContainer" class="meals-container"></div>
+    </section>
+
+    <!-- TAB: ABITUDINI -->
+    <section id="tab-abitudini" class="tab-panel">
+      <h2 class="section-title">Abitudini di oggi</h2>
+      <div id="habitsContainer" class="habits-container"></div>
+
+      <h2 class="section-title">Pasto libero</h2>
+      <div id="freeMealCard" class="free-meal-card"></div>
+    </section>
+
+    <!-- TAB: PESO -->
+    <section id="tab-peso" class="tab-panel">
+      <h2 class="section-title">Peso</h2>
+      <div class="weight-goal-card">
+        <div class="weight-goal-item">
+          <small>Attuale</small>
+          <strong id="weightCurrent">—</strong>
+        </div>
+        <div class="weight-goal-arrow">→</div>
+        <div class="weight-goal-item">
+          <small>Obiettivo</small>
+          <strong id="weightGoal">—</strong>
+        </div>
+      </div>
+      <div class="weight-add">
+        <input type="number" id="weightInput" inputmode="decimal" step="0.1" placeholder="Es. 66.8" aria-label="Nuovo peso in kg">
+        <button id="weightAddBtn" class="btn-primary">Aggiungi</button>
+      </div>
+      <div class="weight-chart-wrap">
+        <canvas id="weightChart" height="200"></canvas>
+      </div>
+      <ul id="weightHistory" class="weight-history"></ul>
+    </section>
+
+    <!-- TAB: INFO -->
+    <section id="tab-info" class="tab-panel">
+      <h2 class="section-title">La dieta</h2>
+      <div id="infoHeader" class="info-header"></div>
+      <details class="info-block" open>
+        <summary>Premessa</summary>
+        <p id="infoPremessa"></p>
+      </details>
+      <details class="info-block">
+        <summary>Regole generali</summary>
+        <ul id="infoRegole"></ul>
+      </details>
+      <details class="info-block">
+        <summary>Nota sui cereali (pranzo/cena)</summary>
+        <p id="infoCereali"></p>
+      </details>
+      <div class="info-footer">
+        <button id="resetDayBtn" class="btn-danger">Azzera scelte di oggi</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAV IN BASSO -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="oggi"><span>📅</span>Oggi</button>
+    <button class="nav-btn" data-tab="abitudini"><span>✅</span>Abitudini</button>
+    <button class="nav-btn" data-tab="peso"><span>⚖️</span>Peso</button>
+    <button class="nav-btn" data-tab="info"><span>ℹ️</span>Info</button>
+  </nav>
+
+  <!-- MODALE SCELTA OPZIONI -->
+  <div id="pickerModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h3 id="pickerTitle">Scegli</h3>
+        <button id="pickerClose" class="modal-close" aria-label="Chiudi">✕</button>
+      </div>
+      <p id="pickerInstr" class="modal-instr"></p>
+      <div id="pickerOptions" class="picker-options"></div>
+      <div id="pickerNote" class="picker-note"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
