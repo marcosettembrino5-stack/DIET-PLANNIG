@@ -339,6 +339,344 @@ const DIETE = {
           "Unisci semi e frutta disidratata in una piccola porzione da portare con te."
         ],
         applica: { scelta: 6 }
+      },
+
+      /* ---- PRANZO ---- */
+      {
+        id: "farro-tonno-pomodorini",
+        nome: "Insalata di farro con tonno e pomodorini",
+        tipo: "pranzo",
+        icona: "🥗",
+        kcal: 370,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua del farro",
+        ingredienti: [
+          { nome: "Farro", qta: "60 g" },
+          { nome: "Tonno al naturale", qta: "90 g" },
+          { nome: "Pomodorini", qta: "a volontà" },
+          { nome: "Rucola / basilico", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il farro in acqua con 1 pizzico di sale, poi raffreddalo.",
+          "Sgocciola il tonno e sbriciolalo.",
+          "Taglia i pomodorini a metà.",
+          "Unisci tutto con rucola, olio a crudo e basilico."
+        ],
+        applica: { cereali: 0, secondi: 3, ortaggi: 0 }
+      },
+      {
+        id: "pasta-pomodoro-mozzarella",
+        nome: "Pasta al pomodoro con mozzarella",
+        tipo: "pranzo",
+        icona: "🍅",
+        kcal: 420,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua di cottura",
+        ingredienti: [
+          { nome: "Pasta", qta: "60 g" },
+          { nome: "Mozzarella (o formaggio fresco)", qta: "90 g" },
+          { nome: "Passata di pomodoro", qta: "q.b." },
+          { nome: "Basilico", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa la pasta con 1 pizzico di sale.",
+          "Scalda la passata di pomodoro con un filo d'olio e basilico.",
+          "Condisci la pasta con il sugo e aggiungi la mozzarella a pezzetti."
+        ],
+        applica: { cereali: 0, secondi: 9, ortaggi: 0 }
+      },
+      {
+        id: "riso-gamberi-zucchine",
+        nome: "Riso con gamberi e zucchine",
+        tipo: "pranzo",
+        icona: "🦐",
+        kcal: 390,
+        sale: "1 pizzico di sale iodato (circa 1 g) a fine cottura",
+        ingredienti: [
+          { nome: "Riso", qta: "60 g" },
+          { nome: "Gamberi", qta: "100 g" },
+          { nome: "Zucchine", qta: "a volontà" },
+          { nome: "Aglio / prezzemolo / limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il riso con 1 pizzico di sale.",
+          "Salta le zucchine a dadini con aglio e poco olio.",
+          "Aggiungi i gamberi e cuoci pochi minuti.",
+          "Manteca col riso, completa con prezzemolo e succo di limone."
+        ],
+        applica: { cereali: 0, secondi: 2, ortaggi: 0 }
+      },
+      {
+        id: "couscous-verdure-ceci",
+        nome: "Cous cous con verdure e ceci",
+        tipo: "pranzo",
+        icona: "🌱",
+        kcal: 380,
+        sale: "1 pizzico di sale iodato (circa 1 g) nel brodo/acqua",
+        ingredienti: [
+          { nome: "Cous cous", qta: "60 g" },
+          { nome: "Ceci cotti", qta: "90 g" },
+          { nome: "Verdure miste (peperoni, zucchine, carote)", qta: "a volontà" },
+          { nome: "Curcuma / paprika / menta", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Reidrata il cous cous con acqua calda leggermente salata e un filo d'olio.",
+          "Salta le verdure a dadini in padella con le spezie.",
+          "Unisci i ceci e le verdure al cous cous, mescola bene."
+        ],
+        applica: { cereali: 0, secondi: 6, ortaggi: 0 }
+      },
+      {
+        id: "insalatona-pollo",
+        nome: "Insalatona con pollo e gallette",
+        tipo: "pranzo",
+        icona: "🥬",
+        kcal: 320,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul pollo",
+        ingredienti: [
+          { nome: "Petto di pollo", qta: "90 g" },
+          { nome: "Gallette", qta: "4" },
+          { nome: "Insalata mista, pomodori, cetrioli", qta: "a volontà" },
+          { nome: "Aceto di mele / limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci il pollo alla griglia o in padella con 1 pizzico di sale.",
+          "Prepara un'insalata abbondante e taglia il pollo a strisce.",
+          "Condisci con olio, aceto di mele e servi con le gallette."
+        ],
+        applica: { cereali: 2, secondi: 0, ortaggi: 0 }
+      },
+
+      /* ---- CENA ---- */
+      {
+        id: "salmone-broccoli-pane",
+        nome: "Salmone al vapore con broccoli",
+        tipo: "cena",
+        icona: "🐠",
+        kcal: 360,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul salmone",
+        ingredienti: [
+          { nome: "Salmone", qta: "100 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Broccoli", qta: "a volontà" },
+          { nome: "Limone / aneto", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci il salmone al vapore con un pizzico di sale e aneto.",
+          "Lessa o cuoci al vapore i broccoli.",
+          "Condisci con olio a crudo e limone. Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 2, ortaggi: 0 }
+      },
+      {
+        id: "vitello-insalata",
+        nome: "Fettina di vitello con insalata",
+        tipo: "cena",
+        icona: "🥩",
+        kcal: 340,
+        sale: "1 pizzico di sale iodato (circa 1 g) sulla carne",
+        ingredienti: [
+          { nome: "Vitello (fettina)", qta: "90 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Insalata mista e pomodori", qta: "a volontà" },
+          { nome: "Rosmarino / limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Scotta la fettina in padella antiaderente con un pizzico di sale.",
+          "Prepara un'insalata fresca condita con olio a crudo.",
+          "Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 1, ortaggi: 0 }
+      },
+      {
+        id: "tofu-verdure-saltate",
+        nome: "Tofu saltato con verdure",
+        tipo: "cena",
+        icona: "🥢",
+        kcal: 330,
+        sale: "Poca salsa di soia al posto del sale (usa con moderazione)",
+        ingredienti: [
+          { nome: "Tofu", qta: "90 g" },
+          { nome: "Riso", qta: "60 g" },
+          { nome: "Verdure miste (peperoni, carote, cavolo)", qta: "a volontà" },
+          { nome: "Zenzero / salsa di soia", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il riso.",
+          "Taglia il tofu a cubetti e rosolalo in padella.",
+          "Aggiungi le verdure a julienne e lo zenzero, salta a fuoco vivo.",
+          "Sfuma con poca salsa di soia e servi col riso."
+        ],
+        applica: { cereali: 0, secondi: 5, ortaggi: 0 }
+      },
+      {
+        id: "merluzzo-patate-forno",
+        nome: "Merluzzo al forno con patate",
+        tipo: "cena",
+        icona: "🍽️",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) su pesce e patate",
+        ingredienti: [
+          { nome: "Merluzzo", qta: "100 g" },
+          { nome: "Patate", qta: "150 g" },
+          { nome: "Prezzemolo / aglio / limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Taglia le patate a tocchetti e condiscile con olio, sale, aglio.",
+          "Adagia il merluzzo in teglia con le patate.",
+          "Cuoci in forno a 190°C per 25-30 min, completa con prezzemolo e limone."
+        ],
+        applica: { cereali: null, secondi: 2, ortaggi: 2 }
+      },
+      {
+        id: "caprese-pane",
+        nome: "Caprese di mozzarella con pane",
+        tipo: "cena",
+        icona: "🧀",
+        kcal: 340,
+        sale: "Solo un pizzico di sale sui pomodori (circa 0.5 g)",
+        ingredienti: [
+          { nome: "Mozzarella / primo sale senza lattosio", qta: "90 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Pomodori", qta: "a volontà" },
+          { nome: "Basilico / origano", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Affetta mozzarella e pomodori e alternali sul piatto.",
+          "Condisci con olio, basilico e un pizzico di sale.",
+          "Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 9, ortaggi: 0 }
+      },
+      {
+        id: "zuppa-legumi-crostini",
+        nome: "Zuppa di lenticchie con crostini",
+        tipo: "cena",
+        icona: "🍲",
+        kcal: 320,
+        sale: "1 pizzico di sale iodato (circa 1 g) a fine cottura",
+        ingredienti: [
+          { nome: "Lenticchie secche", qta: "30 g" },
+          { nome: "Pane (per crostini)", qta: "60 g" },
+          { nome: "Sedano, carota, cipolla", qta: "a volontà" },
+          { nome: "Alloro / pepe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Prepara un soffritto leggero di sedano, carota e cipolla con poco olio.",
+          "Aggiungi le lenticchie e acqua, cuoci finché tenere.",
+          "Aggiusta con un pizzico di sale, servi con crostini di pane tostato."
+        ],
+        applica: { cereali: 1, secondi: 6, ortaggi: 0 }
+      },
+
+      /* ---- COLAZIONE ---- */
+      {
+        id: "latte-biscotti",
+        nome: "Latte con biscotti",
+        tipo: "colazione",
+        icona: "🥛",
+        kcal: 220,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte senza lattosio", qta: "1 bicchiere" },
+          { nome: "Biscotti senza lattosio", qta: "3" }
+        ],
+        preparazione: [
+          "Scalda il latte a piacere.",
+          "Accompagna con i biscotti. Dolcifica con stevia se serve."
+        ],
+        applica: { scelta: 2 }
+      },
+      {
+        id: "spremuta-semi",
+        nome: "Spremuta d'arancia con semi oleosi",
+        tipo: "colazione",
+        icona: "🍊",
+        kcal: 230,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Arance", qta: "2 (spremuta)" },
+          { nome: "Semi oleosi (mandorle/noci)", qta: "20 g" }
+        ],
+        preparazione: [
+          "Spremi le arance al momento.",
+          "Accompagna con una porzione di semi oleosi."
+        ],
+        applica: { scelta: 5 }
+      },
+      {
+        id: "gallette-marmellata",
+        nome: "Gallette con marmellata senza zucchero",
+        tipo: "colazione",
+        icona: "🍓",
+        kcal: 160,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Gallette (o fette biscottate)", qta: "2" },
+          { nome: "Marmellata senza zucchero", qta: "q.b." },
+          { nome: "Yogurt senza lattosio", qta: "1 (a parte)" }
+        ],
+        preparazione: [
+          "Spalma la marmellata senza zucchero sulle gallette.",
+          "Accompagna con uno yogurt senza lattosio."
+        ],
+        applica: { scelta: 1 }
+      },
+
+      /* ---- SPUNTINO ---- */
+      {
+        id: "yogurt-greco",
+        nome: "Yogurt greco senza lattosio",
+        tipo: "spuntino",
+        icona: "🥛",
+        kcal: 90,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Yogurt greco senza lattosio", qta: "1 vasetto" }
+        ],
+        preparazione: [
+          "Gustalo così com'è, eventualmente con stevia o un po' di cannella."
+        ],
+        applica: { scelta: 2 }
+      },
+      {
+        id: "frutta-fresca",
+        nome: "Frutta fresca di stagione",
+        tipo: "spuntino",
+        icona: "🍏",
+        kcal: 60,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Frutta a piacere", qta: "100 g" }
+        ],
+        preparazione: [
+          "Scegli la frutta che preferisci (mela, pera, agrumi, frutti di bosco...)."
+        ],
+        applica: { scelta: 4 }
+      },
+      {
+        id: "olive-lupini",
+        nome: "Olive o lupini",
+        tipo: "spuntino",
+        icona: "🫒",
+        kcal: 90,
+        sale: "Scegli olive/lupini poco salati; sciacquali se troppo sapidi",
+        ingredienti: [
+          { nome: "Olive verdi/nere o lupini", qta: "una manciata (nel palmo)" }
+        ],
+        preparazione: [
+          "Porzione che sta nel palmo della mano, come spuntino salato."
+        ],
+        applica: { scelta: 1 }
       }
     ]
   }
