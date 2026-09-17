@@ -169,6 +169,177 @@ const DIETE = {
       { id: "olioCena", label: "Olio EVO a cena", icona: "🫒" },
       { id: "fiuggi", label: "Grano di lunga vita Fiuggi (sera)", icona: "🌙" },
       { id: "sonno", label: "Dormire 6-8 ore", icona: "😴" }
+    ],
+
+    /* -------------------------------------------------------
+       CALORIE STIMATE (valori standard di riferimento)
+       Ogni chiave corrisponde a un pasto o categoria; l'array
+       ha una kcal per ogni opzione, NELLO STESSO ORDINE delle
+       opzioni definite sopra. Sono stime medie della porzione
+       indicata (include il condimento tipico: 1 cucchiaio olio
+       EVO ~90 kcal è già considerato nei pasti principali).
+       Valori arrotondati, servono da guida non da bilancia.
+       ------------------------------------------------------- */
+    kcalTabella: {
+      colazione: [130, 160, 150, 170, 90, 230],
+      spuntinoMattina: [120, 90, 90, 80, 60, 120, 150, 90, 110],
+      spuntinoPomeriggio: [120, 90, 90, 80, 60, 120, 150, 90, 110],
+      cereali: [210, 160, 130, 220],   // pasta/pane/gallette/tortellini (porzione indicata)
+      secondi: [150, 190, 140, 110, 90, 160, 110, 155, 130, 240, 90],
+      ortaggi: [40, 45, 115]           // verdure libere ~40, fagiolini, patate 150g
+    },
+
+    /* -------------------------------------------------------
+       RICETTARIO
+       Ricette pronte per ciascun tipo di pasto, coerenti con
+       le porzioni della dieta. Ogni ricetta:
+       - tipo: a quale pasto appartiene (colazione/pranzo/cena/spuntino)
+       - kcal: totale stimato
+       - sale: indicazione esplicita del sale
+       - ingredienti: [{ nome, qta }]
+       - preparazione: passi
+       - applica: (opzionale) come compila gli slot del pasto
+         { cereali:<indice opzione>, secondi:<indice>, ortaggi:<indice> }
+         oppure { scelta:<indice> } per colazione/spuntini
+       ------------------------------------------------------- */
+    ricette: [
+      {
+        id: "pasta-zucchine-pollo",
+        nome: "Pasta con zucchine e petto di pollo",
+        tipo: "pranzo",
+        icona: "🍝",
+        kcal: 400,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua di cottura",
+        ingredienti: [
+          { nome: "Pasta", qta: "60 g" },
+          { nome: "Petto di pollo", qta: "90 g" },
+          { nome: "Zucchine", qta: "150 g (a volontà)" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" },
+          { nome: "Aglio / basilico / pepe", qta: "q.b." }
+        ],
+        preparazione: [
+          "Lessa la pasta in acqua con 1 pizzico di sale.",
+          "Taglia le zucchine a rondelle e saltale in padella con poco olio e aglio.",
+          "Aggiungi il pollo a straccetti e cuoci finché è dorato.",
+          "Scola la pasta, mantecala con zucchine e pollo, completa con basilico."
+        ],
+        applica: { cereali: 0, secondi: 0, ortaggi: 0 }
+      },
+      {
+        id: "orata-forno-patate",
+        nome: "Orata al forno con patate",
+        tipo: "cena",
+        icona: "🐟",
+        kcal: 350,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul pesce e sulle patate",
+        ingredienti: [
+          { nome: "Orata (o spigola/merluzzo)", qta: "100 g" },
+          { nome: "Patate", qta: "150 g" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" },
+          { nome: "Limone / rosmarino / prezzemolo", qta: "q.b." }
+        ],
+        preparazione: [
+          "Taglia le patate a fette sottili, condiscile con olio, sale e rosmarino.",
+          "Adagia l'orata pulita in teglia con le patate intorno.",
+          "Irrora con succo di limone e un filo d'olio.",
+          "Cuoci in forno a 190°C per circa 25-30 minuti."
+        ],
+        applica: { cereali: null, secondi: 2, ortaggi: 2 }
+      },
+      {
+        id: "riso-legumi-verdure",
+        nome: "Riso con lenticchie e verdure",
+        tipo: "pranzo",
+        icona: "🍚",
+        kcal: 360,
+        sale: "1 pizzico di sale iodato (circa 1 g) a fine cottura",
+        ingredienti: [
+          { nome: "Riso", qta: "60 g" },
+          { nome: "Lenticchie secche", qta: "30 g" },
+          { nome: "Verdure miste (carote, sedano, spinaci)", qta: "a volontà" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Ammolla/cuoci le lenticchie finché tenere.",
+          "Lessa il riso con 1 pizzico di sale.",
+          "Salta le verdure in padella con poco olio.",
+          "Unisci riso, lenticchie e verdure, completa con un filo d'olio a crudo."
+        ],
+        applica: { cereali: 0, secondi: 6, ortaggi: 0 }
+      },
+      {
+        id: "frittata-verdure",
+        nome: "Frittata di verdure al forno",
+        tipo: "cena",
+        icona: "🍳",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) nelle uova sbattute",
+        ingredienti: [
+          { nome: "Uova", qta: "2" },
+          { nome: "Pane", qta: "60 g (a parte)" },
+          { nome: "Zucchine / spinaci / cipolla", qta: "a volontà" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Sbatti le uova con 1 pizzico di sale e pepe.",
+          "Unisci le verdure tagliate fini.",
+          "Versa in una teglia unta e cuoci in forno a 180°C per 20 min.",
+          "Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 7, ortaggi: 0 }
+      },
+      {
+        id: "yogurt-avena-frutta",
+        nome: "Yogurt con avena e frutta",
+        tipo: "colazione",
+        icona: "🥣",
+        kcal: 260,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Yogurt senza lattosio", qta: "1 vasetto" },
+          { nome: "Fiocchi di avena", qta: "3 cucchiai" },
+          { nome: "Frutta fresca a pezzi", qta: "100-150 g" }
+        ],
+        preparazione: [
+          "Versa lo yogurt in una ciotola.",
+          "Aggiungi i fiocchi di avena.",
+          "Completa con la frutta a pezzi. Dolcifica con stevia se serve."
+        ],
+        applica: { scelta: 0 }
+      },
+      {
+        id: "toast-bresaola",
+        nome: "Toast con affettato magro",
+        tipo: "colazione",
+        icona: "🍞",
+        kcal: 200,
+        sale: "Non aggiungere sale (l'affettato è già sapido)",
+        ingredienti: [
+          { nome: "Pane in cassetta", qta: "1 fetta" },
+          { nome: "Bresaola / fesa di tacchino", qta: "1 fettina" }
+        ],
+        preparazione: [
+          "Tosta la fetta di pane.",
+          "Aggiungi la fettina di affettato magro."
+        ],
+        applica: { scelta: 3 }
+      },
+      {
+        id: "semi-frutta-disidratata",
+        nome: "Mix semi e frutta disidratata",
+        tipo: "spuntino",
+        icona: "🥜",
+        kcal: 150,
+        sale: "Non serve sale (scegli semi al naturale, non salati)",
+        ingredienti: [
+          { nome: "Semi oleosi misti", qta: "20 g" },
+          { nome: "Frutta disidratata", qta: "20 g" }
+        ],
+        preparazione: [
+          "Unisci semi e frutta disidratata in una piccola porzione da portare con te."
+        ],
+        applica: { scelta: 6 }
+      }
     ]
   }
 

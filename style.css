@@ -374,3 +374,100 @@ html, body {
   .modal-sheet { align-self: center; border-radius: 22px; margin-bottom: 5vh; }
   .modal { align-items: center; }
 }
+
+/* ============================================================
+   UPGRADE: CALORIE, PASTI EXTRA, RICETTARIO
+   ============================================================ */
+
+.section-hint { color: var(--text-soft); font-size: 0.83rem; margin: -6px 4px 12px; }
+
+/* ---------- CARD CALORIE ---------- */
+.kcal-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  border: 2px solid transparent;
+}
+.kcal-card.over { border-color: #f3c2c9; }
+.kcal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.kcal-main { line-height: 1; }
+.kcal-main span { font-size: 2rem; font-weight: 800; color: var(--green-dark); }
+.kcal-card.over .kcal-main span { color: var(--danger); }
+.kcal-main small { display: block; color: var(--text-soft); font-size: 0.8rem; margin-top: 2px; }
+.kcal-side { display: flex; gap: 16px; text-align: center; }
+.kcal-side b { display: block; font-size: 1.1rem; color: var(--text); }
+.kcal-side small { color: var(--text-soft); font-size: 0.72rem; }
+.kcal-bar { background: var(--green-light); height: 10px; border-radius: 20px; overflow: hidden; }
+.kcal-fill { height: 100%; width: 0; border-radius: 20px; background: var(--green); transition: width 0.35s ease; }
+.kcal-fill.over { background: var(--danger); }
+.kcal-msg { font-size: 0.8rem; color: var(--text-soft); margin-top: 10px; }
+.kcal-msg.over { color: var(--danger); font-weight: 600; }
+
+/* kcal accanto agli slot dei pasti */
+.slot-kcal { font-size: 0.72rem; color: var(--green-dark); font-weight: 700; margin-left: auto; padding-left: 8px; }
+.meal-kcal-badge { font-size: 0.72rem; color: var(--text-soft); margin-left: 8px; }
+
+/* ---------- PASTI EXTRA ---------- */
+.extras-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.extra-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border-radius: 12px; box-shadow: var(--shadow);
+  padding: 12px 14px;
+}
+.extra-row .ex-name { flex: 1; font-weight: 600; }
+.extra-row .ex-kcal { color: var(--accent); font-weight: 700; }
+.extra-row .ex-del { background: none; border: none; color: var(--danger); font-size: 1.1rem; cursor: pointer; }
+.extra-add { display: flex; gap: 8px; }
+.extra-add input[type="text"] { flex: 1; }
+.extra-add input[type="number"] { width: 78px; }
+.extra-add input {
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 12px; font-size: 0.95rem; background: var(--card);
+}
+.extra-add .btn-primary { padding: 0 18px; font-size: 1.3rem; }
+
+/* ---------- RICETTARIO ---------- */
+.recipe-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; }
+.recipe-chip {
+  flex-shrink: 0; border: 1px solid var(--border); background: var(--card);
+  color: var(--text-soft); border-radius: 20px; padding: 7px 14px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.recipe-chip.active { background: var(--green); color: #fff; border-color: var(--green); }
+.recipes-container { display: flex; flex-direction: column; gap: 12px; }
+.recipe-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 16px; cursor: pointer;
+}
+.recipe-icon {
+  font-size: 1.5rem; width: 46px; height: 46px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--green-light); border-radius: 12px;
+}
+.recipe-meta { flex: 1; min-width: 0; }
+.recipe-name { font-weight: 700; }
+.recipe-tag { font-size: 0.78rem; color: var(--text-soft); text-transform: capitalize; }
+.recipe-kcal { color: var(--accent); font-weight: 700; font-size: 0.9rem; }
+
+/* dettaglio ricetta */
+.recipe-body { overflow-y: auto; }
+.recipe-body .rb-kcal { color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+.recipe-body .rb-section { font-weight: 700; color: var(--green-dark); margin: 16px 0 8px; font-size: 0.95rem; }
+.recipe-body ul { list-style: none; }
+.recipe-body .rb-ing { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.recipe-body .rb-ing span:last-child { color: var(--green-dark); font-weight: 600; }
+.recipe-body ol { padding-left: 20px; }
+.recipe-body ol li { padding: 5px 0; font-size: 0.9rem; }
+.recipe-body .rb-salt {
+  background: var(--green-light); border-radius: 10px; padding: 10px 12px;
+  font-size: 0.85rem; margin-top: 8px;
+}
+.recipe-body .rb-salt b { color: var(--green-dark); }
+.rb-apply {
+  width: 100%; border: none; background: var(--green); color: #fff;
+  font-weight: 700; padding: 14px; border-radius: 12px; font-size: 0.95rem;
+  cursor: pointer; margin-top: 18px;
+}
+.rb-apply-note { font-size: 0.75rem; color: var(--text-soft); text-align: center; margin-top: 8px; }

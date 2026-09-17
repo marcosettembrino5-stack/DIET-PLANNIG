@@ -49,7 +49,33 @@
         <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
       </div>
 
+      <!-- BUDGET CALORIE -->
+      <div id="kcalCard" class="kcal-card">
+        <div class="kcal-top">
+          <div class="kcal-main">
+            <span id="kcalRemaining">0</span>
+            <small>kcal rimaste</small>
+          </div>
+          <div class="kcal-side">
+            <div><b id="kcalUsed">0</b><small>assunte</small></div>
+            <div><b id="kcalBudget">1200</b><small>budget</small></div>
+          </div>
+        </div>
+        <div class="kcal-bar"><div id="kcalFill" class="kcal-fill"></div></div>
+        <div id="kcalMsg" class="kcal-msg"></div>
+      </div>
+
       <div id="mealsContainer" class="meals-container"></div>
+
+      <!-- PASTI EXTRA -->
+      <h2 class="section-title">Pasti extra</h2>
+      <p class="section-hint">Hai mangiato qualcosa in più? Aggiungilo con le calorie dalla confezione: verrà sommato al totale di oggi.</p>
+      <div id="extrasContainer" class="extras-container"></div>
+      <div class="extra-add">
+        <input type="text" id="extraName" placeholder="Nome (es. Barretta)" aria-label="Nome pasto extra">
+        <input type="number" id="extraKcal" inputmode="numeric" placeholder="kcal" aria-label="Calorie">
+        <button id="extraAddBtn" class="btn-primary">+</button>
+      </div>
     </section>
 
     <!-- TAB: ABITUDINI -->
@@ -85,6 +111,14 @@
       <ul id="weightHistory" class="weight-history"></ul>
     </section>
 
+    <!-- TAB: RICETTE -->
+    <section id="tab-ricette" class="tab-panel">
+      <h2 class="section-title">Ricettario</h2>
+      <p class="section-hint">Ricette pronte in linea con la dieta. Tocca una ricetta per vedere ingredienti, quantità e preparazione, e applicarla al giorno.</p>
+      <div class="recipe-filter" id="recipeFilter"></div>
+      <div id="recipesContainer" class="recipes-container"></div>
+    </section>
+
     <!-- TAB: INFO -->
     <section id="tab-info" class="tab-panel">
       <h2 class="section-title">La dieta</h2>
@@ -111,6 +145,7 @@
   <!-- NAV IN BASSO -->
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="oggi"><span>📅</span>Oggi</button>
+    <button class="nav-btn" data-tab="ricette"><span>📖</span>Ricette</button>
     <button class="nav-btn" data-tab="abitudini"><span>✅</span>Abitudini</button>
     <button class="nav-btn" data-tab="peso"><span>⚖️</span>Peso</button>
     <button class="nav-btn" data-tab="info"><span>ℹ️</span>Info</button>
@@ -128,6 +163,19 @@
       <p id="pickerInstr" class="modal-instr"></p>
       <div id="pickerOptions" class="picker-options"></div>
       <div id="pickerNote" class="picker-note"></div>
+    </div>
+  </div>
+
+  <!-- MODALE DETTAGLIO RICETTA -->
+  <div id="recipeModal" class="modal hidden">
+    <div class="modal-backdrop" data-close="recipe"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h3 id="recipeTitle">Ricetta</h3>
+        <button id="recipeClose" class="modal-close" aria-label="Chiudi">✕</button>
+      </div>
+      <div id="recipeBody" class="recipe-body"></div>
     </div>
   </div>
 

@@ -37,13 +37,14 @@
     if (!p.freeMealDates) p.freeMealDates = [];
     return p;
   }
-  // Dati del giorno selezionato { meals:{}, habits:{} }
+  // Dati del giorno selezionato { meals:{}, habits:{}, extras:[] }
   function dayData() {
     const p = profData();
-    if (!p.days[currentDate]) p.days[currentDate] = { meals: {}, habits: {} };
+    if (!p.days[currentDate]) p.days[currentDate] = { meals: {}, habits: {}, extras: [] };
     const d = p.days[currentDate];
     if (!d.meals) d.meals = {};
     if (!d.habits) d.habits = {};
+    if (!d.extras) d.extras = [];
     return d;
   }
 
@@ -88,10 +89,13 @@
     renderDayBar();
     renderFreeMealBanner();
     renderMeals();
+    renderExtras();
+    renderKcal();
     renderHabits();
     renderFreeMealCard();
     renderWeight();
     renderInfo();
+    renderRecipes();
     updateProgress();
   }
 
@@ -150,19 +154,26 @@
       const body = el("div", "meal-body");
       if (meal.note) body.appendChild(el("div", "meal-note", meal.note));
 
+      // Badge kcal del pasto (somma degli slot scelti)
+      const mealKcal = kcalOfMeal(mealKey);
+      if (mealKcal > 0) info.querySelector(".meal-instr").innerHTML =
+        (meal.istruzioni || "") + ` <span class="meal-kcal-badge">· ${mealKcal} kcal</span>`;
+
       if (meal.composizione) {
         // Pasto composto (pranzo/cena): cereali + secondi + ortaggi
         meal.composizione.forEach((catKey) => {
           const cat = diet.categorie[catKey];
           const chosen = saved[catKey];
-          body.appendChild(buildSlot(mealKey, catKey, cat, chosen));
+          const kc = kcalOfChoice(diet, catKey, cat, chosen);
+          body.appendChild(buildSlot(mealKey, catKey, cat, chosen, kc));
         });
         // Nota carboidrati
         body.appendChild(buildCarbNote(diet));
       } else if (meal.opzioni) {
         // Pasto a scelta singola (colazione/spuntini)
         const chosen = saved.scelta;
-        body.appendChild(buildSlot(mealKey, "scelta", { titolo: "Scelta", icona: "•", istruzioni: meal.istruzioni, opzioni: meal.opzioni, note: meal.note }, chosen));
+        const kc = kcalOfChoice(diet, mealKey, meal, chosen);
+        body.appendChild(buildSlot(mealKey, "scelta", { titolo: "Scelta", icona: "•", istruzioni: meal.istruzioni, opzioni: meal.opzioni, note: meal.note }, chosen, kc));
       }
 
       card.appendChild(body);
@@ -170,13 +181,14 @@
     });
   }
 
-  function buildSlot(mealKey, slotKey, cat, chosenValue) {
+  function buildSlot(mealKey, slotKey, cat, chosenValue, kcal) {
     const slot = el("div", "slot" + (chosenValue ? " filled" : ""));
     slot.appendChild(el("div", "slot-icon", cat.icona || "•"));
     const txt = el("div", "slot-text");
     txt.appendChild(el("b", null, cat.titolo));
     txt.appendChild(el("span", null, chosenValue || "Tocca per scegliere"));
     slot.appendChild(txt);
+    if (chosenValue && kcal > 0) slot.appendChild(el("div", "slot-kcal", kcal + " kcal"));
     slot.appendChild(el("div", "slot-arrow", "›"));
     slot.addEventListener("click", () => openPicker(mealKey, slotKey, cat, chosenValue));
     return slot;
@@ -214,6 +226,245 @@
     d.meals[mealKey].done = !d.meals[mealKey].done;
     saveState();
     renderMeals();
+    renderKcal();
+    updateProgress();
+  }
+
+  // ============================================================
+  //  MOTORE CALORIE
+  // ============================================================
+  // kcal di una singola scelta (in base all'indice dell'opzione)
+  function kcalOfChoice(diet, key, cat, chosenValue) {
+    const tab = diet.kcalTabella;
+    if (!chosenValue || !tab || !tab[key] || !cat || !cat.opzioni) return 0;
+    const idx = cat.opzioni.indexOf(chosenValue);
+    if (idx < 0) return 0;
+    const v = tab[key][idx];
+    return typeof v === "number" ? v : 0;
+  }
+
+  // kcal totali di un pasto (somma degli slot / della scelta)
+  function kcalOfMeal(mealKey) {
+    const diet = DIETE[currentProfile];
+    const meal = diet.pasti[mealKey];
+    const saved = (dayData().meals[mealKey]) || {};
+    let tot = 0;
+    if (meal.composizione) {
+      meal.composizione.forEach((catKey) => {
+        tot += kcalOfChoice(diet, catKey, diet.categorie[catKey], saved[catKey]);
+      });
+    } else if (meal.opzioni) {
+      tot += kcalOfChoice(diet, mealKey, meal, saved.scelta);
+    }
+    return tot;
+  }
+
+  // kcal dei pasti previsti + extra
+  function kcalTotaleOggi() {
+    const diet = DIETE[currentProfile];
+    let tot = 0;
+    Object.keys(diet.pasti).forEach((mk) => { tot += kcalOfMeal(mk); });
+    dayData().extras.forEach((e) => { tot += (Number(e.kcal) || 0); });
+    return tot;
+  }
+
+  function renderKcal() {
+    const diet = DIETE[currentProfile];
+    const budget = typeof diet.kcal === "number" ? diet.kcal : 1200;
+    const used = kcalTotaleOggi();
+    const remaining = budget - used;
+    const over = remaining < 0;
+
+    $("#kcalUsed").textContent = used;
+    $("#kcalBudget").textContent = budget;
+    $("#kcalRemaining").textContent = over ? "+" + Math.abs(remaining) : remaining;
+
+    const pct = budget > 0 ? Math.min(100, Math.round((used / budget) * 100)) : 0;
+    const fill = $("#kcalFill");
+    fill.style.width = pct + "%";
+    fill.classList.toggle("over", over);
+    $("#kcalCard").classList.toggle("over", over);
+
+    const msg = $("#kcalMsg");
+    msg.classList.toggle("over", over);
+    if (over) {
+      msg.innerHTML = `⚠️ Hai superato il budget di <b>${Math.abs(remaining)} kcal</b>. Se puoi, alleggerisci i pasti non ancora consumati o fai una camminata extra.`;
+    } else {
+      msg.innerHTML = `Ti restano <b>${remaining} kcal</b> per oggi (budget ${budget}). Le stime dei pasti sono indicative.`;
+    }
+  }
+
+  // ============================================================
+  //  PASTI EXTRA
+  // ============================================================
+  function renderExtras() {
+    const cont = $("#extrasContainer");
+    cont.innerHTML = "";
+    const extras = dayData().extras;
+    if (!extras.length) {
+      const empty = el("div", "section-hint", "Nessun pasto extra oggi.");
+      empty.style.margin = "0 4px 4px";
+      cont.appendChild(empty);
+      return;
+    }
+    extras.forEach((e, i) => {
+      const row = el("div", "extra-row");
+      row.appendChild(el("div", "ex-name", e.nome || "Extra"));
+      row.appendChild(el("div", "ex-kcal", (Number(e.kcal) || 0) + " kcal"));
+      const del = el("button", "ex-del", "🗑");
+      del.addEventListener("click", () => {
+        dayData().extras.splice(i, 1);
+        saveState();
+        renderExtras();
+        renderKcal();
+      });
+      row.appendChild(del);
+      cont.appendChild(row);
+    });
+  }
+
+  function addExtra() {
+    const nameEl = $("#extraName");
+    const kcalEl = $("#extraKcal");
+    const nome = (nameEl.value || "").trim();
+    const kcal = parseInt(kcalEl.value, 10);
+    if (isNaN(kcal) || kcal <= 0) { kcalEl.focus(); return; }
+    dayData().extras.push({ nome: nome || "Extra", kcal: kcal });
+    saveState();
+    nameEl.value = "";
+    kcalEl.value = "";
+    renderExtras();
+    renderKcal();
+  }
+
+  // ============================================================
+  //  RICETTARIO
+  // ============================================================
+  let recipeFilter = "tutte";
+  const TIPI_RICETTA = [
+    { key: "tutte", label: "Tutte" },
+    { key: "colazione", label: "Colazione" },
+    { key: "pranzo", label: "Pranzo" },
+    { key: "cena", label: "Cena" },
+    { key: "spuntino", label: "Spuntino" }
+  ];
+
+  function renderRecipes() {
+    const diet = DIETE[currentProfile];
+    const recipes = diet.ricette || [];
+
+    // Filtri
+    const filterBox = $("#recipeFilter");
+    filterBox.innerHTML = "";
+    TIPI_RICETTA.forEach((t) => {
+      // mostra solo filtri con almeno una ricetta (oltre a "tutte")
+      if (t.key !== "tutte" && !recipes.some((r) => r.tipo === t.key)) return;
+      const chip = el("button", "recipe-chip" + (recipeFilter === t.key ? " active" : ""), t.label);
+      chip.addEventListener("click", () => { recipeFilter = t.key; renderRecipes(); });
+      filterBox.appendChild(chip);
+    });
+
+    // Lista
+    const cont = $("#recipesContainer");
+    cont.innerHTML = "";
+    const list = recipes.filter((r) => recipeFilter === "tutte" || r.tipo === recipeFilter);
+    if (!list.length) {
+      cont.appendChild(el("div", "section-hint", "Nessuna ricetta in questa categoria."));
+      return;
+    }
+    list.forEach((r) => {
+      const card = el("div", "recipe-card");
+      card.appendChild(el("div", "recipe-icon", r.icona || "🍽️"));
+      const meta = el("div", "recipe-meta");
+      meta.appendChild(el("div", "recipe-name", r.nome));
+      meta.appendChild(el("div", "recipe-tag", r.tipo));
+      card.appendChild(meta);
+      card.appendChild(el("div", "recipe-kcal", (r.kcal || "?") + " kcal"));
+      card.addEventListener("click", () => openRecipe(r));
+      cont.appendChild(card);
+    });
+  }
+
+  function openRecipe(r) {
+    const diet = DIETE[currentProfile];
+    $("#recipeTitle").textContent = r.nome;
+    const body = $("#recipeBody");
+    body.innerHTML = "";
+
+    body.appendChild(el("div", "rb-kcal", (r.kcal || "?") + " kcal · " + (r.tipo || "")));
+
+    body.appendChild(el("div", "rb-section", "Ingredienti"));
+    const ul = el("ul");
+    (r.ingredienti || []).forEach((ing) => {
+      const li = el("li", "rb-ing");
+      li.appendChild(el("span", null, ing.nome));
+      li.appendChild(el("span", null, ing.qta || ""));
+      ul.appendChild(li);
+    });
+    body.appendChild(ul);
+
+    body.appendChild(el("div", "rb-salt", "🧂 <b>Sale:</b> " + (r.sale || "a piacere, con moderazione")));
+
+    body.appendChild(el("div", "rb-section", "Preparazione"));
+    const ol = el("ol");
+    (r.preparazione || []).forEach((step) => ol.appendChild(el("li", null, step)));
+    body.appendChild(ol);
+
+    // Pulsante applica al giorno (solo se la ricetta ha una mappatura)
+    if (r.applica) {
+      const targetMeal = mealKeyForRecipe(diet, r);
+      const btn = el("button", "rb-apply", "➕ Aggiungi a " + (targetMeal ? diet.pasti[targetMeal].titolo : "oggi") + " di " + (currentDate === todayKey() ? "oggi" : formatLong(currentDate)));
+      btn.addEventListener("click", () => {
+        applyRecipe(diet, r, targetMeal);
+        closeRecipe();
+        switchTab("oggi");
+      });
+      body.appendChild(btn);
+      body.appendChild(el("div", "rb-apply-note", "Compila automaticamente il pasto con le porzioni della ricetta."));
+    }
+
+    $("#recipeModal").classList.remove("hidden");
+  }
+  function closeRecipe() { $("#recipeModal").classList.add("hidden"); }
+
+  // Determina a quale pasto applicare la ricetta
+  function mealKeyForRecipe(diet, r) {
+    if (r.tipo === "pranzo" && diet.pasti.pranzo) return "pranzo";
+    if (r.tipo === "cena" && diet.pasti.cena) return "cena";
+    if (r.tipo === "colazione" && diet.pasti.colazione) return "colazione";
+    if (r.tipo === "spuntino") {
+      // preferisci lo spuntino non ancora compilato
+      const d = dayData();
+      if (diet.pasti.spuntinoMattina && !(d.meals.spuntinoMattina && d.meals.spuntinoMattina.scelta)) return "spuntinoMattina";
+      if (diet.pasti.spuntinoPomeriggio) return "spuntinoPomeriggio";
+      return "spuntinoMattina";
+    }
+    return null;
+  }
+
+  function applyRecipe(diet, r, mealKey) {
+    if (!mealKey) return;
+    const d = dayData();
+    if (!d.meals[mealKey]) d.meals[mealKey] = {};
+    const meal = diet.pasti[mealKey];
+    const map = r.applica || {};
+
+    if (meal.composizione) {
+      meal.composizione.forEach((catKey) => {
+        const idx = map[catKey];
+        if (idx == null) return; // null/undefined = non impostare
+        const opt = diet.categorie[catKey] && diet.categorie[catKey].opzioni[idx];
+        if (opt) d.meals[mealKey][catKey] = opt;
+      });
+    } else if (meal.opzioni && map.scelta != null) {
+      const opt = meal.opzioni[map.scelta];
+      if (opt) d.meals[mealKey].scelta = opt;
+    }
+    d.meals[mealKey].done = true;
+    d.meals[mealKey].ricetta = r.nome;
+    saveState();
+    renderMeals();
+    renderKcal();
     updateProgress();
   }
 
@@ -568,8 +819,13 @@
     $("#weightAddBtn").addEventListener("click", addWeight);
     $("#weightInput").addEventListener("keydown", (e) => { if (e.key === "Enter") addWeight(); });
 
+    $("#extraAddBtn").addEventListener("click", addExtra);
+    $("#extraKcal").addEventListener("keydown", (e) => { if (e.key === "Enter") addExtra(); });
+
     $("#pickerClose").addEventListener("click", closePicker);
-    $(".modal-backdrop").addEventListener("click", closePicker);
+    $("#pickerModal .modal-backdrop").addEventListener("click", closePicker);
+    $("#recipeClose").addEventListener("click", closeRecipe);
+    $("#recipeModal .modal-backdrop").addEventListener("click", closeRecipe);
 
     $("#resetDayBtn").addEventListener("click", () => {
       if (!confirm("Azzerare pasti e abitudini di " + (currentDate === todayKey() ? "oggi" : formatLong(currentDate)) + "?")) return;

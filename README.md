@@ -7,10 +7,17 @@ Web app mobile-first per seguire la dieta personalizzata, con sistema a scambi, 
 1. Apri `index.html` in un browser.
 2. In alto scegli il profilo (per ora: **Caterina**).
 3. Tab in basso:
-   - **📅 Oggi** – spunta i pasti. Per pranzo/cena scegli cereale + secondo + ortaggi (sistema a scambi). Vedi la stima dei cereali giornalieri (max 120 g).
+   - **📅 Oggi** – spunta i pasti. Per pranzo/cena scegli cereale + secondo + ortaggi (sistema a scambi). Vedi la stima dei cereali giornalieri (max 120 g), il **budget calorie** con le kcal rimaste, e puoi aggiungere **pasti extra** con le calorie prese dalla confezione.
+   - **📖 Ricette** – ricettario con piatti pronti per ogni pasto: ingredienti, quantità (incluso il sale) e preparazione. Tocca una ricetta per applicarla al giorno (compila il pasto e conta le calorie).
    - **✅ Abitudini** – acqua, camminata, olio, sonno, integratore. E il contatore del **pasto libero** (ogni 20 giorni).
    - **⚖️ Peso** – aggiungi il peso, vedi il grafico verso l'obiettivo (60 kg).
    - **ℹ️ Info** – premessa, regole generali, nota cereali. Pulsante per azzerare la giornata.
+
+## Calorie e pasti extra
+
+- Ogni alimento della dieta ha una **kcal stimata** (valori standard di riferimento, indicativi). L'app somma le scelte del giorno e le scala dal budget (1200 kcal per Caterina).
+- I **pasti extra** li aggiungi con nome e calorie manuali (le leggi dalla confezione): vengono sommati al totale. Se superi il budget, l'app te lo segnala senza forzare porzioni "strane" nei pasti (scelta di sicurezza).
+- I valori kcal degli alimenti stanno in `data.js` sotto `kcalTabella` (una kcal per ogni opzione, nello stesso ordine). Le **ricette** stanno in `data.js` sotto `ricette`.
 
 ## Usarla dal telefono (consigliato)
 
