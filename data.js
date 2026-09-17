@@ -677,6 +677,544 @@ const DIETE = {
           "Porzione che sta nel palmo della mano, come spuntino salato."
         ],
         applica: { scelta: 1 }
+      },
+
+      /* ==== PRANZO (aggiunte) ==== */
+      {
+        id: "orzo-pollo-verdure",
+        nome: "Orzo con pollo e verdure grigliate",
+        tipo: "pranzo",
+        icona: "🍛",
+        kcal: 390,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua dell'orzo",
+        ingredienti: [
+          { nome: "Orzo", qta: "60 g" },
+          { nome: "Petto di pollo", qta: "90 g" },
+          { nome: "Zucchine e melanzane grigliate", qta: "a volontà" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa l'orzo con 1 pizzico di sale.",
+          "Griglia il pollo e le verdure a fette.",
+          "Unisci tutto e condisci con olio a crudo e spezie."
+        ],
+        applica: { cereali: 0, secondi: 0, ortaggi: 0 }
+      },
+      {
+        id: "pasta-tonno-olive",
+        nome: "Pasta con tonno e olive",
+        tipo: "pranzo",
+        icona: "🍝",
+        kcal: 400,
+        sale: "1 pizzico di sale iodato (circa 1 g); attenzione alle olive già sapide",
+        ingredienti: [
+          { nome: "Pasta", qta: "60 g" },
+          { nome: "Tonno al naturale", qta: "90 g" },
+          { nome: "Pomodorini e olive", qta: "a volontà" },
+          { nome: "Prezzemolo / peperoncino", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa la pasta con 1 pizzico di sale.",
+          "Salta pomodorini e olive con poco olio.",
+          "Aggiungi il tonno sgocciolato, manteca con la pasta."
+        ],
+        applica: { cereali: 0, secondi: 3, ortaggi: 0 }
+      },
+      {
+        id: "quinoa-legumi",
+        nome: "Quinoa con ceci e verdure",
+        tipo: "pranzo",
+        icona: "🥗",
+        kcal: 380,
+        sale: "1 pizzico di sale iodato (circa 1 g) a fine cottura",
+        ingredienti: [
+          { nome: "Quinoa", qta: "60 g" },
+          { nome: "Ceci cotti", qta: "90 g" },
+          { nome: "Spinaci e pomodorini", qta: "a volontà" },
+          { nome: "Limone / cumino", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Sciacqua e lessa la quinoa con 1 pizzico di sale.",
+          "Salta velocemente gli spinaci in padella.",
+          "Unisci quinoa, ceci e verdure, condisci con olio e limone."
+        ],
+        applica: { cereali: 0, secondi: 6, ortaggi: 0 }
+      },
+      {
+        id: "risotto-funghi",
+        nome: "Risotto ai funghi",
+        tipo: "pranzo",
+        icona: "🍄",
+        kcal: 400,
+        sale: "1 pizzico di sale iodato (circa 1 g) nel brodo vegetale",
+        ingredienti: [
+          { nome: "Riso", qta: "60 g" },
+          { nome: "Funghi", qta: "a volontà" },
+          { nome: "Formaggio fresco (per mantecare)", qta: "90 g" },
+          { nome: "Prezzemolo / brodo vegetale", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Trifola i funghi con poco olio.",
+          "Tosta il riso, aggiungi i funghi e cuoci col brodo poco alla volta.",
+          "Manteca a fine cottura con il formaggio fresco."
+        ],
+        applica: { cereali: 0, secondi: 9, ortaggi: 0 }
+      },
+      {
+        id: "pasta-fredda-verdure",
+        nome: "Pasta fredda con verdure e uova sode",
+        tipo: "pranzo",
+        icona: "🥗",
+        kcal: 410,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua di cottura",
+        ingredienti: [
+          { nome: "Pasta", qta: "60 g" },
+          { nome: "Uova", qta: "2 (sode)" },
+          { nome: "Pomodorini, mais, rucola", qta: "a volontà" },
+          { nome: "Basilico", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa la pasta, scolala e raffreddala.",
+          "Rassoda le uova e tagliale a spicchi.",
+          "Unisci verdure e uova, condisci con olio a crudo e basilico."
+        ],
+        applica: { cereali: 0, secondi: 7, ortaggi: 0 }
+      },
+      {
+        id: "gnocchi-pomodoro",
+        nome: "Gnocchi al pomodoro e basilico",
+        tipo: "pranzo",
+        icona: "🥔",
+        kcal: 380,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua e nel sugo",
+        ingredienti: [
+          { nome: "Gnocchi", qta: "80 g" },
+          { nome: "Formaggio fresco", qta: "90 g" },
+          { nome: "Passata di pomodoro", qta: "q.b." },
+          { nome: "Basilico", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci gli gnocchi in acqua salata finché salgono a galla.",
+          "Condisci con sugo di pomodoro e basilico.",
+          "Completa con il formaggio fresco a pezzetti."
+        ],
+        applica: { cereali: 3, secondi: 9, ortaggi: 0 }
+      },
+      {
+        id: "farro-sgombro",
+        nome: "Farro con sgombro e rucola",
+        tipo: "pranzo",
+        icona: "🐟",
+        kcal: 380,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua del farro",
+        ingredienti: [
+          { nome: "Farro", qta: "60 g" },
+          { nome: "Sgombro al naturale", qta: "90 g" },
+          { nome: "Rucola e pomodorini", qta: "a volontà" },
+          { nome: "Limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il farro e raffreddalo.",
+          "Sgocciola lo sgombro e sbriciolalo.",
+          "Unisci rucola, pomodorini, olio e limone."
+        ],
+        applica: { cereali: 0, secondi: 3, ortaggi: 0 }
+      },
+      {
+        id: "wrap-tacchino",
+        nome: "Wrap di pane con tacchino e verdure",
+        tipo: "pranzo",
+        icona: "🌯",
+        kcal: 350,
+        sale: "Non aggiungere sale (l'affettato è già sapido)",
+        ingredienti: [
+          { nome: "Pane / piadina leggera", qta: "60 g" },
+          { nome: "Fesa di tacchino", qta: "80 g" },
+          { nome: "Insalata, pomodoro, carote", qta: "a volontà" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Farcisci il pane con tacchino e verdure fresche.",
+          "Aggiungi un filo d'olio, arrotola e taglia a metà."
+        ],
+        applica: { cereali: 1, secondi: 8, ortaggi: 0 }
+      },
+
+      /* ==== CENA (aggiunte) ==== */
+      {
+        id: "spigola-cartoccio",
+        nome: "Spigola al cartoccio con verdure",
+        tipo: "cena",
+        icona: "🐟",
+        kcal: 340,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul pesce",
+        ingredienti: [
+          { nome: "Spigola", qta: "100 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Zucchine e pomodorini", qta: "a volontà" },
+          { nome: "Limone / prezzemolo", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Adagia la spigola su carta forno con le verdure.",
+          "Condisci con olio, sale, limone e chiudi il cartoccio.",
+          "Cuoci in forno a 190°C per 20-25 min. Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 2, ortaggi: 0 }
+      },
+      {
+        id: "pollo-limone-insalata",
+        nome: "Pollo al limone con insalata",
+        tipo: "cena",
+        icona: "🍗",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul pollo",
+        ingredienti: [
+          { nome: "Petto di pollo", qta: "90 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Insalata mista", qta: "a volontà" },
+          { nome: "Limone / rosmarino", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci il pollo in padella con succo di limone e rosmarino.",
+          "Servi con insalata condita con olio a crudo e il pane."
+        ],
+        applica: { cereali: 1, secondi: 0, ortaggi: 0 }
+      },
+      {
+        id: "frittata-spinaci",
+        nome: "Frittata di spinaci al forno",
+        tipo: "cena",
+        icona: "🍳",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) nelle uova",
+        ingredienti: [
+          { nome: "Uova", qta: "2" },
+          { nome: "Pane", qta: "60 g (a parte)" },
+          { nome: "Spinaci", qta: "a volontà" },
+          { nome: "Noce moscata / pepe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Sbatti le uova con un pizzico di sale e noce moscata.",
+          "Unisci gli spinaci lessati e strizzati.",
+          "Cuoci in forno a 180°C per 20 min. Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 7, ortaggi: 0 }
+      },
+      {
+        id: "cozze-marinara-pane",
+        nome: "Cozze alla marinara con pane",
+        tipo: "cena",
+        icona: "🦪",
+        kcal: 320,
+        sale: "Non aggiungere sale (le cozze rilasciano acqua già sapida)",
+        ingredienti: [
+          { nome: "Cozze", qta: "1 piatto" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Pomodorini", qta: "a volontà" },
+          { nome: "Aglio / prezzemolo / pepe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Fai aprire le cozze in padella con aglio, olio e pomodorini.",
+          "Completa con prezzemolo e pepe.",
+          "Servi con il pane per la scarpetta."
+        ],
+        applica: { cereali: 1, secondi: 4, ortaggi: 0 }
+      },
+      {
+        id: "tempeh-verdure-forno",
+        nome: "Tempeh con verdure al forno",
+        tipo: "cena",
+        icona: "🌱",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) sulle verdure",
+        ingredienti: [
+          { nome: "Tempeh", qta: "90 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Peperoni, zucchine, cipolla", qta: "a volontà" },
+          { nome: "Paprika / timo", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Taglia il tempeh a fette e le verdure a tocchetti.",
+          "Condisci con olio, sale e spezie, disponi in teglia.",
+          "Cuoci in forno a 190°C per 20-25 min. Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 5, ortaggi: 0 }
+      },
+      {
+        id: "burger-legumi",
+        nome: "Burger di legumi con insalata",
+        tipo: "cena",
+        icona: "🍔",
+        kcal: 340,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'impasto",
+        ingredienti: [
+          { nome: "Lenticchie/ceci secchi", qta: "30 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Insalata e pomodoro", qta: "a volontà" },
+          { nome: "Cumino / prezzemolo", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci i legumi, schiacciali e impasta con spezie e un pizzico di sale.",
+          "Forma un burger e cuocilo in padella con poco olio.",
+          "Servi con pane e insalata."
+        ],
+        applica: { cereali: 1, secondi: 6, ortaggi: 0 }
+      },
+      {
+        id: "ricotta-verdure-pane",
+        nome: "Ricotta con verdure grigliate",
+        tipo: "cena",
+        icona: "🧀",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) sulle verdure",
+        ingredienti: [
+          { nome: "Ricotta di mucca", qta: "90 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Zucchine, melanzane, peperoni grigliati", qta: "a volontà" },
+          { nome: "Menta / pepe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Griglia le verdure a fette.",
+          "Servi la ricotta accanto alle verdure, condisci con olio e menta.",
+          "Accompagna con il pane."
+        ],
+        applica: { cereali: 1, secondi: 9, ortaggi: 0 }
+      },
+      {
+        id: "passato-verdure-crostini",
+        nome: "Passato di verdure con crostini e uovo",
+        tipo: "cena",
+        icona: "🍲",
+        kcal: 310,
+        sale: "1 pizzico di sale iodato (circa 1 g) nel passato",
+        ingredienti: [
+          { nome: "Uovo", qta: "2 (in camicia o sodo)" },
+          { nome: "Pane (crostini)", qta: "60 g" },
+          { nome: "Verdure miste per passato", qta: "a volontà" },
+          { nome: "Pepe / erbe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa le verdure e frullale in un passato.",
+          "Aggiusta con un pizzico di sale e un filo d'olio a crudo.",
+          "Servi con crostini e l'uovo."
+        ],
+        applica: { cereali: 1, secondi: 7, ortaggi: 0 }
+      },
+      {
+        id: "tacchino-verdure",
+        nome: "Straccetti di tacchino con verdure",
+        tipo: "cena",
+        icona: "🦃",
+        kcal: 330,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul tacchino",
+        ingredienti: [
+          { nome: "Tacchino", qta: "90 g" },
+          { nome: "Pane", qta: "60 g" },
+          { nome: "Zucchine e carote", qta: "a volontà" },
+          { nome: "Curry / limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Taglia il tacchino a straccetti e saltalo in padella con poco olio.",
+          "Aggiungi le verdure a julienne e un pizzico di sale.",
+          "Insaporisci con curry o limone. Servi con il pane."
+        ],
+        applica: { cereali: 1, secondi: 0, ortaggi: 0 }
+      },
+
+      /* ==== COLAZIONE (aggiunte) ==== */
+      {
+        id: "porridge-avena",
+        nome: "Porridge di avena e latte",
+        tipo: "colazione",
+        icona: "🥣",
+        kcal: 250,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte senza lattosio", qta: "1 bicchiere" },
+          { nome: "Fiocchi di avena", qta: "3 cucchiai" },
+          { nome: "Cannella / stevia", qta: "q.b." }
+        ],
+        preparazione: [
+          "Scalda il latte con i fiocchi di avena mescolando.",
+          "Cuoci finché diventa cremoso, aromatizza con cannella e stevia."
+        ],
+        applica: { scelta: 0 }
+      },
+      {
+        id: "kefir-frutta",
+        nome: "Kefir con frutta fresca",
+        tipo: "colazione",
+        icona: "🫐",
+        kcal: 180,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Kefir senza lattosio", qta: "1 bicchiere" },
+          { nome: "Frutta fresca (frutti di bosco/banana)", qta: "150 g" }
+        ],
+        preparazione: [
+          "Versa il kefir in una ciotola.",
+          "Aggiungi la frutta a pezzi. Dolcifica con stevia se serve."
+        ],
+        applica: { scelta: 4 }
+      },
+      {
+        id: "pane-nutella",
+        nome: "Pane tostato con nutella senza lattosio",
+        tipo: "colazione",
+        icona: "🍫",
+        kcal: 190,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Pane in cassetta", qta: "1 fetta" },
+          { nome: "Nutella senza lattosio (o burro di arachidi)", qta: "1 cucchiaino" }
+        ],
+        preparazione: [
+          "Tosta la fetta di pane.",
+          "Spalma un velo di crema alle nocciole o burro di arachidi."
+        ],
+        applica: { scelta: 3 }
+      },
+      {
+        id: "macedonia-frullata",
+        nome: "Macedonia frullata col latte",
+        tipo: "colazione",
+        icona: "🥤",
+        kcal: 170,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Frutta mista", qta: "150 g" },
+          { nome: "Latte senza lattosio", qta: "q.b." }
+        ],
+        preparazione: [
+          "Frulla la frutta con un po' di latte fino a ottenere un frappè.",
+          "Dolcifica con stevia se preferisci."
+        ],
+        applica: { scelta: 4 }
+      },
+      {
+        id: "yogurt-muesli",
+        nome: "Yogurt con muesli",
+        tipo: "colazione",
+        icona: "🥣",
+        kcal: 240,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Yogurt senza lattosio", qta: "1 vasetto" },
+          { nome: "Muesli", qta: "3 cucchiai" }
+        ],
+        preparazione: [
+          "Versa lo yogurt in una ciotola e aggiungi il muesli.",
+          "Mescola e gusta subito per mantenerlo croccante."
+        ],
+        applica: { scelta: 0 }
+      },
+      {
+        id: "fette-burro-arachidi",
+        nome: "Fette biscottate con burro di arachidi",
+        tipo: "colazione",
+        icona: "🥜",
+        kcal: 200,
+        sale: "Scegli burro di arachidi senza sale aggiunto",
+        ingredienti: [
+          { nome: "Fette biscottate", qta: "2" },
+          { nome: "Burro di arachidi (o di mandorle)", qta: "1 cucchiaino" }
+        ],
+        preparazione: [
+          "Spalma un velo di burro di arachidi sulle fette biscottate."
+        ],
+        applica: { scelta: 1 }
+      },
+
+      /* ==== SPUNTINO (aggiunte) ==== */
+      {
+        id: "spuntino-mandorle",
+        nome: "Mandorle o noci",
+        tipo: "spuntino",
+        icona: "🌰",
+        kcal: 120,
+        sale: "Scegli frutta secca al naturale, non salata",
+        ingredienti: [
+          { nome: "Mandorle / noci / nocciole", qta: "20 g" }
+        ],
+        preparazione: [
+          "Porzione da 20 g, ideale da tenere in borsa."
+        ],
+        applica: { scelta: 0 }
+      },
+      {
+        id: "spuntino-latte",
+        nome: "Bicchiere di latte",
+        tipo: "spuntino",
+        icona: "🥛",
+        kcal: 90,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte senza lattosio", qta: "1 bicchiere" }
+        ],
+        preparazione: [
+          "Un bicchiere di latte, caldo o freddo a piacere."
+        ],
+        applica: { scelta: 7 }
+      },
+      {
+        id: "spuntino-gelato",
+        nome: "Coppetta di gelato",
+        tipo: "spuntino",
+        icona: "🍨",
+        kcal: 110,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Gelato (cioccolato o frutta)", qta: "1 coppetta piccola" }
+        ],
+        preparazione: [
+          "Una piccola coppetta come sfizio, meglio a gusto frutta o cioccolato fondente."
+        ],
+        applica: { scelta: 8 }
+      },
+      {
+        id: "spuntino-frutta-disidratata",
+        nome: "Frutta disidratata",
+        tipo: "spuntino",
+        icona: "🍑",
+        kcal: 120,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Frutta disidratata (mela, banana, albicocche)", qta: "30-40 g" }
+        ],
+        preparazione: [
+          "Una manciata di frutta disidratata come spuntino dolce e pratico."
+        ],
+        applica: { scelta: 5 }
+      },
+      {
+        id: "spuntino-succo",
+        nome: "Succo di mirtillo o ananas",
+        tipo: "spuntino",
+        icona: "🧃",
+        kcal: 80,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Succo senza zucchero (tappo a vite)", qta: "1 confezione" }
+        ],
+        preparazione: [
+          "Scegli un succo di mirtillo o ananas senza zuccheri aggiunti."
+        ],
+        applica: { scelta: 3 }
       }
     ]
   }
