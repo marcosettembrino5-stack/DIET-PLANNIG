@@ -8,10 +8,18 @@ Web app mobile-first per seguire la dieta personalizzata, con sistema a scambi, 
 2. In alto scegli il profilo (per ora: **Caterina**).
 3. Tab in basso:
    - **📅 Oggi** – spunta i pasti. Per pranzo/cena scegli cereale + secondo + ortaggi (sistema a scambi). Vedi la stima dei cereali giornalieri (max 120 g), il **budget calorie** con le kcal rimaste, e puoi aggiungere **pasti extra** con le calorie prese dalla confezione.
-   - **📖 Ricette** – ricettario con piatti pronti per ogni pasto: ingredienti, quantità (incluso il sale) e preparazione. Tocca una ricetta per applicarla al giorno (compila il pasto e conta le calorie).
-   - **✅ Abitudini** – acqua, camminata, olio, sonno, integratore. E il contatore del **pasto libero** (ogni 20 giorni).
+   - **📖 Ricette** – ricettario con piatti pronti per ogni pasto: ingredienti, quantità (incluso il sale) e preparazione. **Cerca** per nome o ingrediente, segna le **preferite** con la stella. Tocca una ricetta per applicarla al giorno (compila il pasto e conta le calorie).
+   - **🛒 Spesa** – scegli le ricette e l'app genera la **lista della spesa aggregata** (somma le quantità con la stessa unità, es. "Pasta 120 g"). Spuntabile al supermercato.
+   - **📊 Statistiche** – aderenza pasti, media calorie, giorni con abitudini complete, variazione peso, su 7 o 30 giorni. Con grafico calorie e barre per giorno.
+   - **✅ Abitudini** – contatore **acqua a bicchieri** (tocchi +1 fino a 1.8 L), abitudini del giorno e contatore **pasto libero** (ogni 20 giorni).
    - **⚖️ Peso** – aggiungi il peso, vedi il grafico verso l'obiettivo (60 kg).
-   - **ℹ️ Info** – premessa, regole generali, nota cereali. Pulsante per azzerare la giornata.
+   - **ℹ️ Info** – premessa, regole, nota cereali, **promemoria** (acqua/peso/pasti con orari), **tema scuro**, e reset giornata.
+
+## Tema scuro, offline e promemoria
+
+- **Tema scuro**: interruttore 🌙 nell'header o in Info → Impostazioni. La scelta viene ricordata.
+- **Offline**: un service worker (`sw.js`) mette in cache l'app, così funziona senza rete e si avvia più veloce (serve aprirla via http/https almeno una volta, es. da GitHub Pages).
+- **Promemoria**: in Info imposti orari per acqua, peso e pasti. Su Android le notifiche funzionano bene; su iPhone servono iOS 16.4+ e l'app aggiunta alla schermata Home.
 
 ## Calorie e pasti extra
 

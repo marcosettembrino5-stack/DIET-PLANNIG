@@ -35,17 +35,32 @@
     if (!p.days) p.days = {};
     if (!p.weights) p.weights = [];
     if (!p.freeMealDates) p.freeMealDates = [];
+    if (!p.favorites) p.favorites = [];        // id ricette preferite
+    if (!p.shopping) p.shopping = { recipes: [], checked: {} }; // lista spesa
     return p;
   }
-  // Dati del giorno selezionato { meals:{}, habits:{}, extras:[] }
+  // Dati del giorno selezionato { meals:{}, habits:{}, extras:[], waterMl:0 }
   function dayData() {
     const p = profData();
-    if (!p.days[currentDate]) p.days[currentDate] = { meals: {}, habits: {}, extras: [] };
+    if (!p.days[currentDate]) p.days[currentDate] = { meals: {}, habits: {}, extras: [], waterMl: 0 };
     const d = p.days[currentDate];
     if (!d.meals) d.meals = {};
     if (!d.habits) d.habits = {};
     if (!d.extras) d.extras = [];
+    if (typeof d.waterMl !== "number") d.waterMl = 0;
     return d;
+  }
+  // Impostazioni globali (tema, promemoria)
+  function settings() {
+    if (!state.settings) state.settings = {};
+    const s = state.settings;
+    if (!s.theme) s.theme = "light";
+    if (!s.reminders) s.reminders = {
+      water: { time: "11:00", on: false },
+      weight: { time: "08:00", on: false },
+      meals: { time: "20:30", on: false }
+    };
+    return s;
   }
 
   // ---------- UTIL DATE ----------
@@ -91,11 +106,14 @@
     renderMeals();
     renderExtras();
     renderKcal();
+    renderWater();
     renderHabits();
     renderFreeMealCard();
     renderWeight();
     renderInfo();
     renderRecipes();
+    renderSpesa();
+    renderReminderSettings();
     updateProgress();
   }
 
@@ -341,13 +359,30 @@
   //  RICETTARIO
   // ============================================================
   let recipeFilter = "tutte";
+  let recipeSearch = "";
   const TIPI_RICETTA = [
     { key: "tutte", label: "Tutte" },
+    { key: "preferiti", label: "★ Preferiti" },
     { key: "colazione", label: "Colazione" },
     { key: "pranzo", label: "Pranzo" },
     { key: "cena", label: "Cena" },
     { key: "spuntino", label: "Spuntino" }
   ];
+
+  function isFavorite(id) { return profData().favorites.indexOf(id) >= 0; }
+  function toggleFavorite(id) {
+    const favs = profData().favorites;
+    const i = favs.indexOf(id);
+    if (i >= 0) favs.splice(i, 1); else favs.push(id);
+    saveState();
+    renderRecipes();
+  }
+
+  function recipeMatchesSearch(r, q) {
+    if (!q) return true;
+    if ((r.nome || "").toLowerCase().includes(q)) return true;
+    return (r.ingredienti || []).some((ing) => (ing.nome || "").toLowerCase().includes(q));
+  }
 
   function renderRecipes() {
     const diet = DIETE[currentProfile];
@@ -357,19 +392,24 @@
     const filterBox = $("#recipeFilter");
     filterBox.innerHTML = "";
     TIPI_RICETTA.forEach((t) => {
-      // mostra solo filtri con almeno una ricetta (oltre a "tutte")
-      if (t.key !== "tutte" && !recipes.some((r) => r.tipo === t.key)) return;
+      if (t.key !== "tutte" && t.key !== "preferiti" && !recipes.some((r) => r.tipo === t.key)) return;
       const chip = el("button", "recipe-chip" + (recipeFilter === t.key ? " active" : ""), t.label);
       chip.addEventListener("click", () => { recipeFilter = t.key; renderRecipes(); });
       filterBox.appendChild(chip);
     });
 
-    // Lista
+    // Lista filtrata per categoria + ricerca
+    const q = recipeSearch.trim().toLowerCase();
     const cont = $("#recipesContainer");
     cont.innerHTML = "";
-    const list = recipes.filter((r) => recipeFilter === "tutte" || r.tipo === recipeFilter);
+    const list = recipes.filter((r) => {
+      const byCat = recipeFilter === "tutte" ? true
+        : recipeFilter === "preferiti" ? isFavorite(r.id)
+        : r.tipo === recipeFilter;
+      return byCat && recipeMatchesSearch(r, q);
+    });
     if (!list.length) {
-      cont.appendChild(el("div", "section-hint", "Nessuna ricetta in questa categoria."));
+      cont.appendChild(el("div", "section-hint", q ? "Nessuna ricetta trovata." : "Nessuna ricetta in questa categoria."));
       return;
     }
     list.forEach((r) => {
@@ -379,7 +419,14 @@
       meta.appendChild(el("div", "recipe-name", r.nome));
       meta.appendChild(el("div", "recipe-tag", r.tipo));
       card.appendChild(meta);
-      card.appendChild(el("div", "recipe-kcal", (r.kcal || "?") + " kcal"));
+      const right = el("div", "recipe-right");
+      right.appendChild(el("div", "recipe-kcal", (r.kcal || "?") + " kcal"));
+      const fav = el("button", "recipe-fav", isFavorite(r.id) ? "★" : "☆");
+      fav.style.color = isFavorite(r.id) ? "var(--accent)" : "var(--text-soft)";
+      fav.addEventListener("click", (ev) => { ev.stopPropagation(); toggleFavorite(r.id); });
+      right.appendChild(fav);
+      card.appendChild(right);
+      // click sulla card (non sulla stella) apre il dettaglio
       card.addEventListener("click", () => openRecipe(r));
       cont.appendChild(card);
     });
@@ -466,6 +513,425 @@
     renderMeals();
     renderKcal();
     updateProgress();
+  }
+
+  // ============================================================
+  //  ACQUA A BICCHIERI
+  // ============================================================
+  const GLASS_ML = 200;
+  function waterGoalMl() {
+    // 1.8 L default; provo a leggere dalle abitudini se presente un numero
+    return 1800;
+  }
+  function renderWater() {
+    const goal = waterGoalMl();
+    const d = dayData();
+    const ml = d.waterMl || 0;
+    const glasses = Math.round(ml / GLASS_ML);
+    const totalGlasses = Math.ceil(goal / GLASS_ML);
+
+    $("#waterMl").textContent = ml;
+    $("#waterGoal").textContent = goal;
+    $("#waterGlasses").textContent = glasses;
+
+    const row = $("#waterGlassesRow");
+    row.innerHTML = "";
+    for (let i = 0; i < totalGlasses; i++) {
+      const g = el("div", "glass" + (i < glasses ? " full" : ""));
+      g.addEventListener("click", () => { setWater((i + 1) * GLASS_ML); });
+      row.appendChild(g);
+    }
+  }
+  function setWater(ml) {
+    const goal = waterGoalMl();
+    const d = dayData();
+    d.waterMl = Math.max(0, Math.min(goal, ml));
+    // sincronizza l'abitudine "acqua" se raggiunto l'obiettivo
+    if (d.waterMl >= goal) d.habits.acqua = true;
+    else if (d.habits.acqua) d.habits.acqua = false;
+    saveState();
+    renderWater();
+    renderHabits();
+  }
+  function addWater(delta) {
+    const d = dayData();
+    setWater((d.waterMl || 0) + delta);
+  }
+
+  // ============================================================
+  //  LISTA DELLA SPESA
+  // ============================================================
+  function renderSpesa() {
+    const diet = DIETE[currentProfile];
+    const shop = profData().shopping;
+
+    // Ricette selezionate
+    const sel = $("#spesaSelected");
+    sel.innerHTML = "";
+    if (!shop.recipes.length) {
+      sel.appendChild(el("div", "section-hint", "Nessuna ricetta selezionata. Tocca “Aggiungi ricette”."));
+    } else {
+      shop.recipes.forEach((id, idx) => {
+        const r = (diet.ricette || []).find((x) => x.id === id);
+        if (!r) return;
+        const chip = el("div", "spesa-chip");
+        chip.appendChild(el("div", "recipe-icon", r.icona || "🍽️"));
+        const nm = el("div", "sc-name");
+        nm.appendChild(el("div", null, r.nome));
+        nm.appendChild(el("div", "sc-tag", r.tipo));
+        chip.appendChild(nm);
+        const del = el("button", "sc-del", "🗑");
+        del.addEventListener("click", () => {
+          shop.recipes.splice(idx, 1);
+          saveState();
+          renderSpesa();
+        });
+        chip.appendChild(del);
+        sel.appendChild(chip);
+      });
+    }
+
+    // Ingredienti aggregati
+    const listBox = $("#spesaList");
+    listBox.innerHTML = "";
+    const aggregated = aggregateIngredients(diet, shop.recipes);
+    if (!aggregated.length) {
+      listBox.appendChild(el("div", "section-hint", "La lista ingredienti apparirà qui."));
+      return;
+    }
+    aggregated.forEach((item) => {
+      const checked = !!shop.checked[item.key];
+      const row = el("div", "spesa-item" + (checked ? " checked" : ""));
+      row.appendChild(el("div", "si-check", "✓"));
+      row.appendChild(el("div", "si-name", item.nome));
+      row.appendChild(el("div", "si-qta", item.display));
+      row.addEventListener("click", () => {
+        shop.checked[item.key] = !shop.checked[item.key];
+        saveState();
+        renderSpesa();
+      });
+      listBox.appendChild(row);
+    });
+  }
+
+  // Aggrega ingredienti sommando le quantità con la stessa unità
+  function aggregateIngredients(diet, recipeIds) {
+    const map = {}; // key -> { nome, byUnit: {unit: number}, testo: [] }
+    recipeIds.forEach((id) => {
+      const r = (diet.ricette || []).find((x) => x.id === id);
+      if (!r) return;
+      (r.ingredienti || []).forEach((ing) => {
+        const key = (ing.nome || "").toLowerCase().trim();
+        if (!map[key]) map[key] = { nome: ing.nome, byUnit: {}, testi: [] };
+        const parsed = parseQta(ing.qta);
+        if (parsed) {
+          map[key].byUnit[parsed.unit] = (map[key].byUnit[parsed.unit] || 0) + parsed.value;
+        } else {
+          map[key].testi.push(ing.qta || "q.b.");
+        }
+      });
+    });
+    // Costruisci output con display leggibile
+    return Object.keys(map).map((key) => {
+      const m = map[key];
+      const parts = [];
+      Object.keys(m.byUnit).forEach((u) => {
+        const v = Math.round(m.byUnit[u] * 100) / 100;
+        parts.push(u ? (v + " " + u) : String(v));
+      });
+      // aggiungi testi non numerici unici
+      const testiUnici = [...new Set(m.testi)];
+      testiUnici.forEach((t) => { if (t && !/^q\.?b\.?$/i.test(t)) parts.push(t); });
+      return { key, nome: m.nome, display: parts.length ? parts.join(" + ") : "q.b." };
+    }).sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  // Estrae valore+unità da una quantità testuale ("60 g", "2", "1 bicchiere",
+  // "1 cucchiaio (10 g)" -> preferisce i grammi tra parentesi).
+  function parseQta(qta) {
+    if (!qta) return null;
+    const str = String(qta);
+    // se c'è un valore in grammi tra parentesi, usalo (più utile per la spesa)
+    const paren = str.match(/\((\d+(?:[.,]\d+)?)\s*(g|gr|grammi|ml)\)/i);
+    if (paren) {
+      let u = paren[2].toLowerCase();
+      if (["g", "gr", "grammi"].includes(u)) u = "g";
+      return { value: parseFloat(paren[1].replace(",", ".")), unit: u };
+    }
+    const m = str.match(/^(\d+(?:[.,]\d+)?)\s*([a-zA-Zàèéìòù]+)?/);
+    if (!m) return null;
+    const value = parseFloat(m[1].replace(",", "."));
+    if (isNaN(value)) return null;
+    let unit = (m[2] || "").toLowerCase();
+    // normalizza alcune unità
+    if (["g", "gr", "grammi"].includes(unit)) unit = "g";
+    else if (["l", "litri"].includes(unit)) unit = "L";
+    else if (["ml"].includes(unit)) unit = "ml";
+    else if (["bicchiere", "bicchieri"].includes(unit)) unit = "bicchieri";
+    else if (["vasetto", "vasetti"].includes(unit)) unit = "vasetti";
+    else if (["cucchiaio", "cucchiai"].includes(unit)) unit = "cucchiai";
+    else if (["fetta", "fette"].includes(unit)) unit = "fette";
+    // se non c'è unità è un conteggio (pezzi)
+    if (!unit) unit = "pz";
+    return { value, unit };
+  }
+
+  // Modale selezione ricette per la spesa
+  function openSpesaPicker() {
+    const diet = DIETE[currentProfile];
+    const shop = profData().shopping;
+    const box = $("#spesaModalList");
+    box.innerHTML = "";
+    (diet.ricette || []).forEach((r) => {
+      const isSel = shop.recipes.includes(r.id);
+      const b = el("button", "picker-opt" + (isSel ? " selected" : ""),
+        (r.icona || "🍽️") + " " + r.nome + " · " + r.tipo);
+      b.addEventListener("click", () => {
+        const i = shop.recipes.indexOf(r.id);
+        if (i >= 0) shop.recipes.splice(i, 1); else shop.recipes.push(r.id);
+        saveState();
+        openSpesaPicker(); // aggiorna selezione nella modale
+        renderSpesa();
+      });
+      box.appendChild(b);
+    });
+    $("#spesaModal").classList.remove("hidden");
+  }
+  function closeSpesaPicker() { $("#spesaModal").classList.add("hidden"); }
+
+  // ============================================================
+  //  STATISTICHE
+  // ============================================================
+  let statsRange = 7;
+  function renderStats() {
+    const diet = DIETE[currentProfile];
+    const p = profData();
+    const days = lastNDates(statsRange);
+
+    const nMeals = Object.keys(diet.pasti).length;
+    const nHabits = (diet.abitudini || []).length;
+    let mealsSum = 0, mealsMax = 0;
+    let kcalSum = 0, kcalDays = 0;
+    let habitsOkDays = 0;
+    const perDay = [];
+
+    days.forEach((dk) => {
+      const day = p.days[dk];
+      let done = 0, kc = 0, habitsDone = 0;
+      if (day) {
+        Object.keys(diet.pasti).forEach((mk) => { if (day.meals[mk] && day.meals[mk].done) done++; });
+        kc = kcalTotaleForDay(diet, day);
+        (diet.abitudini || []).forEach((h) => { if (day.habits[h.id]) habitsDone++; });
+      }
+      mealsSum += done; mealsMax += nMeals;
+      if (kc > 0) { kcalSum += kc; kcalDays++; }
+      if (nHabits > 0 && habitsDone === nHabits) habitsOkDays++;
+      perDay.push({ date: dk, done: done, total: nMeals, kcal: kc });
+    });
+
+    const mealsPct = mealsMax > 0 ? Math.round((mealsSum / mealsMax) * 100) : 0;
+    const kcalAvg = kcalDays > 0 ? Math.round(kcalSum / kcalDays) : 0;
+
+    $("#statMeals").textContent = mealsPct + "%";
+    $("#statKcal").textContent = kcalAvg > 0 ? kcalAvg : "—";
+    $("#statHabits").textContent = habitsOkDays + "/" + statsRange;
+
+    // Variazione peso nel periodo
+    const weights = p.weights.slice().sort((a, b) => a.date.localeCompare(b.date))
+      .filter((w) => days.includes(w.date));
+    if (weights.length >= 2) {
+      const diff = Math.round((weights[weights.length - 1].kg - weights[0].kg) * 10) / 10;
+      $("#statWeight").textContent = (diff > 0 ? "+" : "") + diff + " kg";
+    } else {
+      $("#statWeight").textContent = "—";
+    }
+
+    drawStatsKcalChart(perDay, diet);
+    renderMealsBars(perDay);
+  }
+
+  function kcalTotaleForDay(diet, day) {
+    let tot = 0;
+    Object.keys(diet.pasti).forEach((mk) => {
+      const meal = diet.pasti[mk];
+      const saved = day.meals[mk] || {};
+      if (meal.composizione) {
+        meal.composizione.forEach((ck) => { tot += kcalOfChoice(diet, ck, diet.categorie[ck], saved[ck]); });
+      } else if (meal.opzioni) {
+        tot += kcalOfChoice(diet, mk, meal, saved.scelta);
+      }
+    });
+    (day.extras || []).forEach((e) => { tot += (Number(e.kcal) || 0); });
+    return tot;
+  }
+
+  function lastNDates(n) {
+    const arr = [];
+    for (let i = n - 1; i >= 0; i--) arr.push(shiftDate(todayKey(), -i));
+    return arr;
+  }
+
+  function renderMealsBars(perDay) {
+    const box = $("#statsMealsBars");
+    box.innerHTML = "";
+    const giorniBrevi = ["dom","lun","mar","mer","gio","ven","sab"];
+    perDay.forEach((d) => {
+      const pct = d.total > 0 ? Math.round((d.done / d.total) * 100) : 0;
+      const row = el("div", "stat-bar-row");
+      const dd = parseKey(d.date);
+      row.appendChild(el("div", "sb-day", giorniBrevi[dd.getDay()] + " " + dd.getDate()));
+      const track = el("div", "stat-bar-track");
+      const fill = el("div", "stat-bar-fill");
+      fill.style.width = pct + "%";
+      track.appendChild(fill);
+      row.appendChild(track);
+      row.appendChild(el("div", "sb-val", pct + "%"));
+      box.appendChild(row);
+    });
+  }
+
+  function drawStatsKcalChart(perDay, diet) {
+    const canvas = $("#statsKcalChart");
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.clientWidth || 320;
+    const cssH = 160;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    const budget = typeof diet.kcal === "number" ? diet.kcal : 1200;
+    const vals = perDay.map((d) => d.kcal);
+    const maxV = Math.max(budget, ...vals, 1) * 1.1;
+    const pad = 28;
+    const plotW = cssW - pad * 2;
+    const plotH = cssH - pad * 2;
+    const n = perDay.length;
+    const bw = n > 0 ? plotW / n * 0.6 : 0;
+
+    // linea budget
+    const yBudget = pad + plotH - (budget / maxV) * plotH;
+    ctx.strokeStyle = "#f4a836";
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(pad, yBudget); ctx.lineTo(cssW - pad, yBudget); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // barre
+    perDay.forEach((d, i) => {
+      const x = pad + (plotW / n) * i + (plotW / n - bw) / 2;
+      const h = (d.kcal / maxV) * plotH;
+      const y = pad + plotH - h;
+      ctx.fillStyle = d.kcal > budget ? "#d1495b" : "#2e7d5b";
+      ctx.fillRect(x, y, bw, h);
+    });
+  }
+
+  // ============================================================
+  //  PROMEMORIA / NOTIFICHE
+  // ============================================================
+  let reminderTimers = [];
+  function renderReminderSettings() {
+    const s = settings();
+    const r = s.reminders;
+    $("#remWater").value = r.water.time;
+    $("#remWaterOn").checked = r.water.on;
+    $("#remWeight").value = r.weight.time;
+    $("#remWeightOn").checked = r.weight.on;
+    $("#remMeals").value = r.meals.time;
+    $("#remMealsOn").checked = r.meals.on;
+
+    const status = $("#reminderStatus");
+    const supported = ("Notification" in window);
+    if (!supported) {
+      status.textContent = "⚠️ Questo browser non supporta le notifiche.";
+    } else if (Notification.permission === "granted") {
+      status.textContent = "✅ Notifiche attive.";
+    } else if (Notification.permission === "denied") {
+      status.textContent = "🔕 Notifiche bloccate dal browser. Abilitale nelle impostazioni del sito.";
+    } else {
+      status.textContent = "Tocca “Attiva promemoria” per abilitare le notifiche.";
+    }
+
+    const note = $("#reminderNote");
+    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    note.innerHTML = isiOS
+      ? "Su iPhone/iPad le notifiche funzionano solo se aggiungi l'app alla schermata Home e la apri da lì (iOS 16.4+). I promemoria scattano mentre l'app è aperta o installata."
+      : "I promemoria scattano quando l'app è aperta in background. Per notifiche sempre attive, aggiungi l'app alla schermata Home.";
+  }
+
+  function saveReminderFromUI() {
+    const s = settings();
+    s.reminders.water = { time: $("#remWater").value || "11:00", on: $("#remWaterOn").checked };
+    s.reminders.weight = { time: $("#remWeight").value || "08:00", on: $("#remWeightOn").checked };
+    s.reminders.meals = { time: $("#remMeals").value || "20:30", on: $("#remMealsOn").checked };
+    saveState();
+    scheduleReminders();
+  }
+
+  function enableReminders() {
+    if (!("Notification" in window)) { renderReminderSettings(); return; }
+    Notification.requestPermission().then(() => {
+      renderReminderSettings();
+      scheduleReminders();
+    });
+  }
+
+  // Pianifica i timer per la giornata corrente (mentre l'app è aperta)
+  function scheduleReminders() {
+    reminderTimers.forEach((t) => clearTimeout(t));
+    reminderTimers = [];
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const s = settings().reminders;
+    const items = [
+      { cfg: s.water, title: "💧 Bevi acqua", body: "Ricordati di idratarti verso l'obiettivo di 1.8 L." },
+      { cfg: s.weight, title: "⚖️ Pesati", body: "Registra il peso di oggi nell'app." },
+      { cfg: s.meals, title: "🍽️ Registra i pasti", body: "Segna i pasti di oggi e controlla le calorie." }
+    ];
+    items.forEach((it) => {
+      if (!it.cfg.on) return;
+      const ms = msUntilTime(it.cfg.time);
+      if (ms == null) return;
+      const timer = setTimeout(() => {
+        try { new Notification(it.title, { body: it.body, icon: "icon.svg" }); } catch (e) { /* ignore */ }
+        // riprogramma per il giorno dopo
+        scheduleReminders();
+      }, ms);
+      reminderTimers.push(timer);
+    });
+  }
+  // ms da adesso fino al prossimo orario "HH:MM"
+  function msUntilTime(hhmm) {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(hhmm || "");
+    if (!m) return null;
+    const now = new Date();
+    const target = new Date();
+    target.setHours(Number(m[1]), Number(m[2]), 0, 0);
+    if (target <= now) target.setDate(target.getDate() + 1);
+    return target - now;
+  }
+
+  // ============================================================
+  //  TEMA
+  // ============================================================
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    const toggle = $("#themeToggle");
+    if (toggle) toggle.textContent = theme === "dark" ? "☀️" : "🌙";
+    const check = $("#themeCheck");
+    if (check) check.checked = theme === "dark";
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "dark" ? "#16211c" : "#2e7d5b");
+  }
+  function setTheme(theme) {
+    settings().theme = theme;
+    saveState();
+    applyTheme(theme);
+  }
+  function toggleTheme() {
+    setTheme(settings().theme === "dark" ? "light" : "dark");
   }
 
   // ============================================================
@@ -785,9 +1251,12 @@
   function switchTab(tab) {
     document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
     document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
-    $("#tab-" + tab).classList.add("active");
-    document.querySelector('.nav-btn[data-tab="' + tab + '"]').classList.add("active");
-    if (tab === "peso") renderWeight(); // ridisegna il canvas quando visibile
+    const panel = $("#tab-" + tab);
+    if (panel) panel.classList.add("active");
+    const btn = document.querySelector('.nav-btn[data-tab="' + tab + '"]');
+    if (btn) btn.classList.add("active");
+    if (tab === "peso") renderWeight();  // ridisegna il canvas quando visibile
+    if (tab === "stats") renderStats();  // calcola le statistiche all'apertura
     window.scrollTo(0, 0);
   }
 
@@ -827,6 +1296,45 @@
     $("#recipeClose").addEventListener("click", closeRecipe);
     $("#recipeModal .modal-backdrop").addEventListener("click", closeRecipe);
 
+    // Acqua
+    $("#waterPlus").addEventListener("click", () => addWater(GLASS_ML));
+    $("#waterMinus").addEventListener("click", () => addWater(-GLASS_ML));
+
+    // Ricerca ricette
+    $("#recipeSearch").addEventListener("input", (e) => { recipeSearch = e.target.value; renderRecipes(); });
+
+    // Lista spesa
+    $("#spesaPickBtn").addEventListener("click", openSpesaPicker);
+    $("#spesaModalClose").addEventListener("click", closeSpesaPicker);
+    $("#spesaModal .modal-backdrop").addEventListener("click", closeSpesaPicker);
+    $("#spesaClearBtn").addEventListener("click", () => {
+      if (!confirm("Svuotare la lista della spesa?")) return;
+      const shop = profData().shopping;
+      shop.recipes = []; shop.checked = {};
+      saveState();
+      renderSpesa();
+    });
+
+    // Statistiche: range
+    document.querySelectorAll("#statsRange .range-chip").forEach((c) => {
+      c.addEventListener("click", () => {
+        document.querySelectorAll("#statsRange .range-chip").forEach((x) => x.classList.remove("active"));
+        c.classList.add("active");
+        statsRange = Number(c.dataset.range) || 7;
+        renderStats();
+      });
+    });
+
+    // Tema
+    $("#themeToggle").addEventListener("click", toggleTheme);
+    $("#themeCheck").addEventListener("change", (e) => setTheme(e.target.checked ? "dark" : "light"));
+
+    // Promemoria
+    ["remWater","remWaterOn","remWeight","remWeightOn","remMeals","remMealsOn"].forEach((id) => {
+      $("#" + id).addEventListener("change", saveReminderFromUI);
+    });
+    $("#reminderEnableBtn").addEventListener("click", enableReminders);
+
     $("#resetDayBtn").addEventListener("click", () => {
       if (!confirm("Azzerare pasti e abitudini di " + (currentDate === todayKey() ? "oggi" : formatLong(currentDate)) + "?")) return;
       const p = profData();
@@ -837,6 +1345,7 @@
 
     window.addEventListener("resize", () => {
       if ($("#tab-peso").classList.contains("active")) renderWeight();
+      if ($("#tab-stats").classList.contains("active")) renderStats();
     });
   }
 
@@ -849,10 +1358,22 @@
       return;
     }
     state.lastProfile = currentProfile;
+    applyTheme(settings().theme);
+    registerServiceWorker();
     renderProfiles();
     bindEvents();
     renderAll();
+    scheduleReminders();
     saveState();
+  }
+
+  function registerServiceWorker() {
+    if ("serviceWorker" in navigator) {
+      // solo su http/https (non su file://)
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        navigator.serviceWorker.register("sw.js").catch(() => { /* ignore */ });
+      }
+    }
   }
 
   document.addEventListener("DOMContentLoaded", init);

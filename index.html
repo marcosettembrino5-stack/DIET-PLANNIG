@@ -21,7 +21,10 @@
         <span class="brand-logo">🥗</span>
         <span class="brand-name">NutriApp</span>
       </div>
-      <select id="profileSelect" class="profile-select" aria-label="Scegli profilo"></select>
+      <div class="header-actions">
+        <select id="profileSelect" class="profile-select" aria-label="Scegli profilo"></select>
+        <button id="themeToggle" class="icon-btn" aria-label="Cambia tema">🌙</button>
+      </div>
     </div>
   </header>
 
@@ -80,6 +83,20 @@
 
     <!-- TAB: ABITUDINI -->
     <section id="tab-abitudini" class="tab-panel">
+      <h2 class="section-title">Acqua</h2>
+      <div id="waterCard" class="water-card">
+        <div class="water-head">
+          <div class="water-amount"><span id="waterMl">0</span> / <span id="waterGoal">1800</span> ml</div>
+          <div class="water-glasses-count"><span id="waterGlasses">0</span> bicchieri</div>
+        </div>
+        <div class="water-glasses" id="waterGlassesRow"></div>
+        <div class="water-controls">
+          <button id="waterMinus" class="water-btn">−</button>
+          <span class="water-hint">1 bicchiere = 200 ml</span>
+          <button id="waterPlus" class="water-btn">＋</button>
+        </div>
+      </div>
+
       <h2 class="section-title">Abitudini di oggi</h2>
       <div id="habitsContainer" class="habits-container"></div>
 
@@ -114,9 +131,41 @@
     <!-- TAB: RICETTE -->
     <section id="tab-ricette" class="tab-panel">
       <h2 class="section-title">Ricettario</h2>
-      <p class="section-hint">Ricette pronte in linea con la dieta. Tocca una ricetta per vedere ingredienti, quantità e preparazione, e applicarla al giorno.</p>
+      <input type="search" id="recipeSearch" class="recipe-search" placeholder="🔍 Cerca ricetta o ingrediente..." aria-label="Cerca ricetta">
       <div class="recipe-filter" id="recipeFilter"></div>
       <div id="recipesContainer" class="recipes-container"></div>
+    </section>
+
+    <!-- TAB: SPESA -->
+    <section id="tab-spesa" class="tab-panel">
+      <h2 class="section-title">Lista della spesa</h2>
+      <p class="section-hint">Scegli le ricette che vuoi preparare: l'app somma gli ingredienti in un'unica lista da spuntare al supermercato.</p>
+      <div class="spesa-actions">
+        <button id="spesaPickBtn" class="btn-primary">＋ Aggiungi ricette</button>
+        <button id="spesaClearBtn" class="btn-ghost">Svuota</button>
+      </div>
+      <div id="spesaSelected" class="spesa-selected"></div>
+      <h3 class="sub-title">Ingredienti</h3>
+      <div id="spesaList" class="spesa-list"></div>
+    </section>
+
+    <!-- TAB: STATISTICHE -->
+    <section id="tab-stats" class="tab-panel">
+      <h2 class="section-title">Statistiche</h2>
+      <div class="stats-range" id="statsRange">
+        <button class="range-chip active" data-range="7">7 giorni</button>
+        <button class="range-chip" data-range="30">30 giorni</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><b id="statMeals">—</b><small>Aderenza pasti</small></div>
+        <div class="stat-card"><b id="statKcal">—</b><small>Media kcal/die</small></div>
+        <div class="stat-card"><b id="statHabits">—</b><small>Giorni abitudini ok</small></div>
+        <div class="stat-card"><b id="statWeight">—</b><small>Var. peso</small></div>
+      </div>
+      <h3 class="sub-title">Calorie giornaliere</h3>
+      <div class="stats-chart-wrap"><canvas id="statsKcalChart" height="160"></canvas></div>
+      <h3 class="sub-title">Aderenza pasti per giorno</h3>
+      <div id="statsMealsBars" class="stats-bars"></div>
     </section>
 
     <!-- TAB: INFO -->
@@ -135,6 +184,35 @@
         <summary>Nota sui cereali (pranzo/cena)</summary>
         <p id="infoCereali"></p>
       </details>
+
+      <h2 class="section-title">Promemoria</h2>
+      <div id="reminderStatus" class="reminder-status"></div>
+      <div class="reminder-list">
+        <label class="reminder-row">
+          <span>💧 Bevi acqua</span>
+          <input type="time" id="remWater" value="11:00">
+          <input type="checkbox" id="remWaterOn">
+        </label>
+        <label class="reminder-row">
+          <span>⚖️ Pesati</span>
+          <input type="time" id="remWeight" value="08:00">
+          <input type="checkbox" id="remWeightOn">
+        </label>
+        <label class="reminder-row">
+          <span>🍽️ Registra i pasti</span>
+          <input type="time" id="remMeals" value="20:30">
+          <input type="checkbox" id="remMealsOn">
+        </label>
+      </div>
+      <button id="reminderEnableBtn" class="btn-primary reminder-enable">Attiva promemoria</button>
+      <p id="reminderNote" class="section-hint"></p>
+
+      <h2 class="section-title">Impostazioni</h2>
+      <label class="setting-row">
+        <span>🌙 Tema scuro</span>
+        <input type="checkbox" id="themeCheck">
+      </label>
+
       <div class="info-footer">
         <button id="resetDayBtn" class="btn-danger">Azzera scelte di oggi</button>
       </div>
@@ -146,6 +224,8 @@
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="oggi"><span>📅</span>Oggi</button>
     <button class="nav-btn" data-tab="ricette"><span>📖</span>Ricette</button>
+    <button class="nav-btn" data-tab="spesa"><span>🛒</span>Spesa</button>
+    <button class="nav-btn" data-tab="stats"><span>📊</span>Statistiche</button>
     <button class="nav-btn" data-tab="abitudini"><span>✅</span>Abitudini</button>
     <button class="nav-btn" data-tab="peso"><span>⚖️</span>Peso</button>
     <button class="nav-btn" data-tab="info"><span>ℹ️</span>Info</button>
@@ -176,6 +256,20 @@
         <button id="recipeClose" class="modal-close" aria-label="Chiudi">✕</button>
       </div>
       <div id="recipeBody" class="recipe-body"></div>
+    </div>
+  </div>
+
+  <!-- MODALE SELEZIONE RICETTE PER LA SPESA -->
+  <div id="spesaModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h3>Scegli le ricette</h3>
+        <button id="spesaModalClose" class="modal-close" aria-label="Chiudi">✕</button>
+      </div>
+      <p class="modal-instr">Tocca per aggiungere/togliere. La lista si aggiorna in automatico.</p>
+      <div id="spesaModalList" class="picker-options"></div>
     </div>
   </div>
 

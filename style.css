@@ -20,6 +20,26 @@
   --header-h: 56px;
 }
 
+/* ---------- TEMA SCURO ---------- */
+html[data-theme="dark"] {
+  --green: #37916b;
+  --green-dark: #7fd3ac;
+  --green-light: #1c2e27;
+  --green-soft: #24413530;
+  --accent: #f4b256;
+  --danger: #e06a7a;
+  --bg: #121815;
+  --card: #1b2420;
+  --text: #e6ede9;
+  --text-soft: #9db0a8;
+  --border: #2b3831;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+html[data-theme="dark"] .app-header { background: #16211c; }
+html[data-theme="dark"] .picker-opt.selected,
+html[data-theme="dark"] .slot.filled,
+html[data-theme="dark"] .habit-row.done { background: #23372e; }
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 html, body {
@@ -471,3 +491,123 @@ html, body {
   cursor: pointer; margin-top: 18px;
 }
 .rb-apply-note { font-size: 0.75rem; color: var(--text-soft); text-align: center; margin-top: 8px; }
+
+/* ============================================================
+   FEATURE: nav estesa, tema, acqua, ricerca/preferiti,
+   spesa, statistiche, promemoria
+   ============================================================ */
+
+/* Header actions */
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  background: rgba(255,255,255,0.18); border: none; color: #fff;
+  width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem; cursor: pointer;
+}
+
+/* Nav scrollabile con più voci */
+.bottom-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.bottom-nav::-webkit-scrollbar { display: none; }
+.nav-btn { min-width: 68px; flex: 1 0 auto; padding: 0 4px; }
+
+.sub-title { font-size: 0.95rem; font-weight: 700; color: var(--green-dark); margin: 18px 4px 10px; }
+.btn-ghost {
+  border: 1px solid var(--border); background: var(--card); color: var(--text-soft);
+  font-weight: 600; padding: 10px 16px; border-radius: 12px; cursor: pointer;
+}
+
+/* ---------- ACQUA A BICCHIERI ---------- */
+.water-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; }
+.water-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.water-amount { font-size: 1.4rem; font-weight: 800; color: var(--green-dark); }
+.water-amount span:first-child { color: var(--green); }
+.water-glasses-count { color: var(--text-soft); font-size: 0.85rem; }
+.water-glasses { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.glass {
+  width: 30px; height: 38px; border-radius: 4px 4px 8px 8px;
+  border: 2px solid var(--green-soft); background: transparent;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.glass.full { background: var(--green); border-color: var(--green); }
+.glass.full::after { content: "💧"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 0.85rem; }
+.water-controls { display: flex; align-items: center; justify-content: space-between; }
+.water-hint { color: var(--text-soft); font-size: 0.78rem; }
+.water-btn {
+  width: 48px; height: 48px; border-radius: 12px; border: none;
+  background: var(--green-light); color: var(--green-dark);
+  font-size: 1.6rem; font-weight: 700; cursor: pointer;
+}
+.water-btn:active { background: var(--green-soft); }
+
+/* ---------- RICERCA / PREFERITI RICETTE ---------- */
+.recipe-search {
+  width: 100%; border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 14px; font-size: 0.95rem; background: var(--card);
+  color: var(--text); margin-bottom: 12px;
+}
+.recipe-fav {
+  background: none; border: none; font-size: 1.3rem; cursor: pointer;
+  padding: 0 4px; flex-shrink: 0; line-height: 1;
+}
+.recipe-card .recipe-right { display: flex; align-items: center; gap: 6px; }
+
+/* ---------- LISTA SPESA ---------- */
+.spesa-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+.spesa-actions .btn-primary { flex: 1; padding: 12px; }
+.spesa-selected { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.spesa-chip {
+  display: flex; align-items: center; gap: 10px; background: var(--card);
+  border-radius: 12px; box-shadow: var(--shadow); padding: 10px 14px;
+}
+.spesa-chip .sc-name { flex: 1; font-size: 0.9rem; }
+.spesa-chip .sc-tag { font-size: 0.72rem; color: var(--text-soft); }
+.spesa-chip .sc-del { background: none; border: none; color: var(--danger); font-size: 1rem; cursor: pointer; }
+.spesa-list { display: flex; flex-direction: column; gap: 6px; }
+.spesa-item {
+  display: flex; align-items: center; gap: 12px; background: var(--card);
+  border-radius: 12px; box-shadow: var(--shadow); padding: 12px 14px; cursor: pointer;
+}
+.spesa-item .si-check {
+  width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--border);
+  display: grid; place-items: center; color: transparent; font-size: 0.8rem; flex-shrink: 0;
+}
+.spesa-item.checked .si-check { background: var(--green); border-color: var(--green); color: #fff; }
+.spesa-item.checked .si-name { text-decoration: line-through; color: var(--text-soft); }
+.spesa-item .si-name { flex: 1; }
+.spesa-item .si-qta { color: var(--green-dark); font-weight: 600; font-size: 0.9rem; }
+
+/* ---------- STATISTICHE ---------- */
+.stats-range, .stats-bars { }
+.stats-range { display: flex; gap: 8px; margin-bottom: 14px; }
+.range-chip {
+  border: 1px solid var(--border); background: var(--card); color: var(--text-soft);
+  border-radius: 20px; padding: 7px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.range-chip.active { background: var(--green); color: #fff; border-color: var(--green); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+.stat-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; text-align: center; }
+.stat-card b { display: block; font-size: 1.5rem; color: var(--green-dark); }
+.stat-card small { color: var(--text-soft); font-size: 0.78rem; }
+.stats-chart-wrap { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; }
+.stats-bars { display: flex; flex-direction: column; gap: 6px; }
+.stat-bar-row { display: flex; align-items: center; gap: 10px; }
+.stat-bar-row .sb-day { width: 58px; font-size: 0.75rem; color: var(--text-soft); text-transform: capitalize; }
+.stat-bar-track { flex: 1; height: 16px; background: var(--green-light); border-radius: 8px; overflow: hidden; }
+.stat-bar-fill { height: 100%; background: var(--green); border-radius: 8px; }
+.stat-bar-row .sb-val { width: 42px; text-align: right; font-size: 0.75rem; color: var(--text-soft); }
+
+/* ---------- PROMEMORIA / IMPOSTAZIONI ---------- */
+.reminder-status { font-size: 0.83rem; color: var(--text-soft); margin: 0 4px 10px; }
+.reminder-list { display: flex; flex-direction: column; gap: 8px; }
+.reminder-row, .setting-row {
+  display: flex; align-items: center; gap: 12px; background: var(--card);
+  border-radius: 12px; box-shadow: var(--shadow); padding: 12px 16px;
+}
+.reminder-row span, .setting-row span { flex: 1; font-weight: 500; }
+.reminder-row input[type="time"] {
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px;
+  background: var(--bg); color: var(--text); font-size: 0.9rem;
+}
+.reminder-row input[type="checkbox"], .setting-row input[type="checkbox"] {
+  width: 22px; height: 22px; accent-color: var(--green);
+}
+.reminder-enable { width: 100%; margin-top: 12px; padding: 13px; }
