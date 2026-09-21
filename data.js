@@ -1415,25 +1415,25 @@ const DIETE = {
         applica: { cereali: 0, secondi: 1, ortaggi: 0 }
       },
       {
-        id: "m-polenta-formaggio",
-        nome: "Polenta con formaggio e verdure",
+        id: "m-riso-formaggio-verdure",
+        nome: "Riso con formaggio e verdure",
         tipo: "cena",
-        icona: "🌽",
-        kcal: 460,
+        icona: "🧀",
+        kcal: 450,
         senzaGlutine: true,
-        sale: "1 pizzico di sale iodato (circa 1 g) nella polenta",
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua del riso",
         ingredienti: [
-          { nome: "Farina di mais (polenta)", qta: "70 g" },
+          { nome: "Riso", qta: "70 g" },
           { nome: "Formaggio fresco", qta: "120 g" },
           { nome: "Cicoria", qta: "200 g" },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
         preparazione: [
-          "Prepara la polenta con acqua e 1 pizzico di sale.",
-          "Salta le verdure in padella con poco olio.",
-          "Servi la polenta con il formaggio a pezzetti e le verdure."
+          "Lessa il riso con 1 pizzico di sale.",
+          "Salta la cicoria in padella con poco olio.",
+          "Manteca il riso col formaggio a pezzetti e servi con le verdure."
         ],
-        applica: { cereali: 3, secondi: 4, ortaggi: 0 }
+        applica: { cereali: 0, secondi: 4, ortaggi: 0 }
       },
       {
         id: "m-quinoa-ceci",
@@ -1541,26 +1541,26 @@ const DIETE = {
         applica: { cereali: 0, secondi: 0, ortaggi: 0 }
       },
       {
-        id: "m-polenta-pesce",
-        nome: "Polenta con pesce e verdure",
+        id: "m-riso-pesce-broccoletti",
+        nome: "Riso con pesce e broccoletti",
         tipo: "cena",
         icona: "🐟",
         kcal: 450,
         senzaGlutine: true,
         sale: "1 pizzico di sale iodato (circa 1 g)",
         ingredienti: [
-          { nome: "Farina di mais (polenta)", qta: "70 g" },
+          { nome: "Riso", qta: "70 g" },
           { nome: "Merluzzo (o orata)", qta: "150 g" },
           { nome: "Broccoletti", qta: "200 g" },
           { nome: "Prezzemolo", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
         preparazione: [
-          "Prepara la polenta con acqua e un pizzico di sale.",
-          "Cuoci il pesce al vapore o in padella.",
-          "Servi con le verdure saltate e un filo d'olio."
+          "Lessa il riso con un pizzico di sale.",
+          "Cuoci il pesce al vapore o in padella e salta i broccoletti.",
+          "Servi il riso con pesce e verdure, filo d'olio a crudo."
         ],
-        applica: { cereali: 3, secondi: 3, ortaggi: 0 }
+        applica: { cereali: 0, secondi: 3, ortaggi: 0 }
       },
       {
         id: "m-pasta-mais-tonno",
@@ -1692,6 +1692,151 @@ const DIETE = {
           "Una porzione pratica da portare con te."
         ],
         applica: { scelta: 10 }
+      },
+      {
+        id: "m-pollo-gallette-insalata",
+        nome: "Pollo con gallette e insalata",
+        tipo: "cena",
+        icona: "🍗",
+        kcal: 410,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul pollo",
+        ingredienti: [
+          { nome: "Petto di pollo", qta: "120 g" },
+          { nome: "Gallette di riso/mais", qta: "6" },
+          { nome: "Insalata (songino/rucola)", qta: "150 g" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci il pollo in padella o alla griglia con un pizzico di sale.",
+          "Prepara un'insalata fresca condita con olio.",
+          "Servi con le gallette."
+        ],
+        applica: { cereali: 5, secondi: 1, ortaggi: 0 }
+      },
+      {
+        id: "m-tofu-riso-verdure",
+        nome: "Tofu saltato con riso e verdure",
+        tipo: "cena",
+        icona: "🥢",
+        kcal: 430,
+        senzaGlutine: true,
+        sale: "Poca salsa di soia senza glutine al posto del sale",
+        ingredienti: [
+          { nome: "Riso", qta: "70 g" },
+          { nome: "Tofu", qta: "120 g" },
+          { nome: "Carote", qta: "100 g" },
+          { nome: "Zucchine", qta: "100 g" },
+          { nome: "Zenzero", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il riso.",
+          "Rosola il tofu a cubetti, aggiungi le verdure a julienne e lo zenzero.",
+          "Sfuma con poca salsa di soia senza glutine e servi col riso."
+        ],
+        applica: { cereali: 0, secondi: 6, ortaggi: 0 }
+      },
+      {
+        id: "m-frittata-gallette",
+        nome: "Frittata di zucchine con gallette",
+        tipo: "cena",
+        icona: "🍳",
+        kcal: 400,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nelle uova",
+        ingredienti: [
+          { nome: "Uova", qta: "2" },
+          { nome: "Gallette di riso/mais", qta: "6" },
+          { nome: "Zucchine", qta: "200 g" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Sbatti le uova con un pizzico di sale, unisci le zucchine grattugiate.",
+          "Cuoci la frittata in padella con poco olio.",
+          "Servi con le gallette."
+        ],
+        applica: { cereali: 5, secondi: 2, ortaggi: 0 }
+      },
+      {
+        id: "m-amaranto-legumi",
+        nome: "Amaranto con lenticchie e verdure",
+        tipo: "pranzo",
+        icona: "🥗",
+        kcal: 440,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) a fine cottura",
+        ingredienti: [
+          { nome: "Amaranto", qta: "70 g" },
+          { nome: "Lenticchie secche", qta: "40 g" },
+          { nome: "Carote", qta: "100 g" },
+          { nome: "Zucchine", qta: "100 g" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa amaranto e lenticchie separatamente.",
+          "Salta le verdure a dadini in padella.",
+          "Unisci tutto e condisci con olio a crudo."
+        ],
+        applica: { cereali: 0, secondi: 7, ortaggi: 0 }
+      },
+      {
+        id: "m-riso-tacchino-zucchine",
+        nome: "Riso con tacchino e zucchine",
+        tipo: "pranzo",
+        icona: "🦃",
+        kcal: 460,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua del riso",
+        ingredienti: [
+          { nome: "Riso", qta: "70 g" },
+          { nome: "Tacchino", qta: "120 g" },
+          { nome: "Zucchine", qta: "200 g" },
+          { nome: "Curry / limone", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il riso con un pizzico di sale.",
+          "Salta il tacchino a straccetti con le zucchine.",
+          "Unisci al riso e insaporisci con curry o limone."
+        ],
+        applica: { cereali: 0, secondi: 1, ortaggi: 0 }
+      },
+      {
+        id: "m-colazione-pane-marmellata",
+        nome: "Pane senza glutine e marmellata",
+        tipo: "colazione",
+        icona: "🍓",
+        kcal: 250,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere (200 ml)" },
+          { nome: "Pane senza glutine", qta: "40 g" },
+          { nome: "Marmellata senza zucchero", qta: "1 cucchiaino" }
+        ],
+        preparazione: [
+          "Tosta il pane senza glutine.",
+          "Spalma un velo di marmellata senza zucchero. Accompagna col latte."
+        ],
+        applica: { scelta: 4 }
+      },
+      {
+        id: "m-spuntino-olive",
+        nome: "Olive e parmigiano",
+        tipo: "spuntino",
+        icona: "🫒",
+        kcal: 110,
+        senzaGlutine: true,
+        sale: "Scegli olive poco salate; sciacquale se troppo sapide",
+        ingredienti: [
+          { nome: "Olive verdi/nere", qta: "una manciata (30 g)" },
+          { nome: "Parmigiano", qta: "20 g" }
+        ],
+        preparazione: [
+          "Uno spuntino salato leggero post-cena."
+        ],
+        applica: { scelta: 3 }
       }
     ]
   }
@@ -1716,13 +1861,13 @@ const DIETE = {
    dalla schermata Settimana. */
 function _mc(id) { return { marco: id, caterina: id }; }
 const MENU_SETTIMANALE_DEFAULT = [
-  { giorno: "Lunedì",    colazione: _mc("m-colazione-riso-frutta"), pranzo: _mc("m-riso-pollo-zucchine"), cena: _mc("m-pesce-gallette"),        spuntino: _mc("m-spuntino-yogurt") },
-  { giorno: "Martedì",   colazione: _mc("m-colazione-mais-frutta"), pranzo: _mc("m-quinoa-ceci"),         cena: _mc("m-polenta-formaggio"),     spuntino: _mc("m-spuntino-frutta-sec") },
-  { giorno: "Mercoledì", colazione: _mc("m-colazione-biscotti-gf"), pranzo: _mc("m-pasta-mais-tonno"),    cena: _mc("m-uova-verdure-gallette"), spuntino: _mc("m-spuntino-fondente") },
-  { giorno: "Giovedì",   colazione: _mc("m-colazione-riso-frutta"), pranzo: _mc("m-riso-manzo-verdure"),  cena: _mc("m-polenta-pesce"),         spuntino: _mc("m-spuntino-yogurt") },
-  { giorno: "Venerdì",   colazione: _mc("m-colazione-mais-frutta"), pranzo: _mc("m-quinoa-ceci"),         cena: _mc("m-pesce-gallette"),        spuntino: _mc("m-spuntino-frutta-sec") },
-  { giorno: "Sabato",    colazione: _mc("m-colazione-biscotti-gf"), pranzo: _mc("m-riso-pollo-zucchine"), cena: _mc("m-polenta-formaggio"),     spuntino: _mc("m-spuntino-fondente") },
-  { giorno: "Domenica",  colazione: _mc("m-colazione-riso-frutta"), pranzo: _mc("m-pasta-mais-tonno"),    cena: _mc("m-uova-verdure-gallette"), spuntino: _mc("m-spuntino-yogurt") }
+  { giorno: "Lunedì",    colazione: _mc("m-colazione-riso-frutta"),    pranzo: _mc("m-riso-pollo-zucchine"), cena: _mc("m-pesce-gallette"),            spuntino: _mc("m-spuntino-yogurt") },
+  { giorno: "Martedì",   colazione: _mc("m-colazione-mais-frutta"),    pranzo: _mc("m-quinoa-ceci"),         cena: _mc("m-riso-formaggio-verdure"),    spuntino: _mc("m-spuntino-frutta-sec") },
+  { giorno: "Mercoledì", colazione: _mc("m-colazione-biscotti-gf"),    pranzo: _mc("m-pasta-mais-tonno"),    cena: _mc("m-uova-verdure-gallette"),     spuntino: _mc("m-spuntino-fondente") },
+  { giorno: "Giovedì",   colazione: _mc("m-colazione-latte-biscotti"), pranzo: _mc("m-riso-manzo-verdure"),  cena: _mc("m-riso-pesce-broccoletti"),    spuntino: _mc("m-spuntino-yogurt") },
+  { giorno: "Venerdì",   colazione: _mc("m-colazione-mais-frutta"),    pranzo: _mc("m-quinoa-ceci"),         cena: _mc("m-pesce-gallette"),            spuntino: _mc("m-spuntino-frutta-sec") },
+  { giorno: "Sabato",    colazione: _mc("m-colazione-biscotti-gf"),    pranzo: _mc("m-riso-pollo-zucchine"), cena: _mc("m-riso-formaggio-verdure"),    spuntino: _mc("m-spuntino-fondente") },
+  { giorno: "Domenica",  colazione: _mc("m-colazione-riso-frutta"),    pranzo: _mc("m-pasta-mais-tonno"),    cena: _mc("m-uova-verdure-gallette"),     spuntino: _mc("m-spuntino-yogurt") }
 ];
 
 /* ============================================================

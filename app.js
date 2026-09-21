@@ -893,14 +893,23 @@
     const currentId = weekMenu()[dayIdx][slot.key][persona];
     const nomePersona = persona === "marco" ? "Marco" : "Caterina";
 
+    // Escludi le ricette già usate nella settimana per questa persona in questo pasto
+    // (evita doppioni). La ricetta corrente resta sempre selezionabile.
+    const usate = new Set();
+    weekMenu().forEach((day, di) => {
+      const cell = day[slot.key];
+      if (cell && cell[persona] && !(di === dayIdx)) usate.add(cell[persona]);
+    });
+    const filtrati = candidates.filter((r) => r.id === currentId || !usate.has(r.id));
+
     $("#pickerTitle").textContent = slot.label + " · " + nomePersona;
     $("#pickerInstr").textContent = persona === "marco"
-      ? "Solo ricette senza glutine (adatte a Marco)."
-      : "Ricette per Caterina (anche con glutine, che lei può mangiare).";
+      ? "Solo ricette senza glutine, non già in settimana."
+      : "Ricette per Caterina, non già in settimana.";
     $("#pickerNote").textContent = weekMenu()[dayIdx].giorno;
     const box = $("#pickerOptions");
     box.innerHTML = "";
-    candidates.forEach((r) => {
+    filtrati.forEach((r) => {
       const tag = r.senzaGlutine ? " · SG" : "";
       const b = el("button", "picker-opt" + (r.id === currentId ? " selected" : ""),
         (r.icona || "🍽️") + " " + r.nome + " · " + (r.kcal || "?") + " kcal" + tag);
@@ -912,8 +921,8 @@
       });
       box.appendChild(b);
     });
-    if (!candidates.length) {
-      box.appendChild(el("div", "section-hint", "Nessuna ricetta per questo pasto."));
+    if (!filtrati.length) {
+      box.appendChild(el("div", "section-hint", "Nessun altro piatto disponibile per questo pasto (tutti già usati in settimana)."));
     }
     $("#pickerModal").classList.remove("hidden");
   }
