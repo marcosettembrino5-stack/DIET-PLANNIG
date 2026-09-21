@@ -769,18 +769,34 @@
     });
   }
 
-  // Riga di un pasto per una persona (piatto proprio, toccabile per cambiare)
+  // Riga di un pasto per una persona (piatto proprio, toccabile per cambiare).
+  // Mostra il nome del piatto + gli ingredienti principali con le quantità.
   function buildPersonMealRow(dayIdx, slot, persona, etichetta, recipeId) {
     const r = recipeById(recipeId);
     const row = el("div", "week-person-row " + persona + (r ? "" : " empty"));
     row.appendChild(el("div", "wpr-who", etichetta));
     const info = el("div", "wpr-info");
     info.appendChild(el("div", "wpr-name", r ? ((r.icona || "🍽️") + " " + r.nome) : "— tocca per scegliere"));
-    if (r && r.kcal) info.appendChild(el("div", "wpr-kcal", r.kcal + " kcal"));
+    if (r) {
+      // ingredienti principali (salta gli aromi "q.b."), con quantità
+      const ings = (r.ingredienti || [])
+        .filter((ing) => !/^q\.?b\.?$/i.test(ing.qta || ""))
+        .map((ing) => shortIngredient(ing.nome) + " " + ing.qta);
+      if (ings.length) info.appendChild(el("div", "wpr-ings", ings.join(" · ")));
+      if (r.kcal) info.appendChild(el("div", "wpr-kcal", r.kcal + " kcal"));
+    }
     row.appendChild(info);
     row.appendChild(el("div", "wm-arrow", "›"));
     row.addEventListener("click", () => openWeekPicker(dayIdx, slot, persona));
     return row;
+  }
+
+  // Accorcia i nomi lunghi degli ingredienti per la card (mantiene il senso)
+  function shortIngredient(nome) {
+    return String(nome)
+      .replace(/\s*\(.*?\)\s*/g, "")   // togli parentesi esplicative
+      .replace(/ senza lattosio/i, "")
+      .trim();
   }
 
   // Verifica se una ricetta ha almeno un ingrediente con variante per Caterina

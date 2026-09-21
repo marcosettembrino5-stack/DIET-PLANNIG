@@ -781,5 +781,6 @@ html[data-theme="dark"] .week-person-row.marco .wpr-who { color: #8ec5f0; }
 html[data-theme="dark"] .week-person-row.caterina .wpr-who { color: #f0a7cf; }
 .wpr-info { flex: 1; min-width: 0; }
 .wpr-name { font-weight: 600; font-size: 0.9rem; }
-.wpr-kcal { font-size: 0.74rem; color: var(--text-soft); }
+.wpr-ings { font-size: 0.76rem; color: var(--text-soft); margin-top: 2px; line-height: 1.35; }
+.wpr-kcal { font-size: 0.72rem; color: var(--text-soft); margin-top: 2px; font-weight: 600; }
 .week-person-row.empty .wpr-name { font-style: italic; color: var(--text-soft); font-weight: 500; }

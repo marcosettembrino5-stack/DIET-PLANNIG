@@ -1642,6 +1642,25 @@ const DIETE = {
         applica: { scelta: 3 }
       },
       {
+        id: "m-colazione-latte-biscotti",
+        nome: "Latte con biscotti",
+        tipo: "colazione",
+        icona: "🥛",
+        kcal: 270,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere (200 ml)" },
+          { nome: "Biscotti con farine tollerate (riso/castagna)", qta: "3" },
+          { nome: "Banana", qta: "1 (circa 120 g)" }
+        ],
+        preparazione: [
+          "Scalda il latte vegetale a piacere.",
+          "Accompagna con i biscotti senza glutine e la banana a fette."
+        ],
+        applica: { scelta: 3 }
+      },
+      {
         id: "m-spuntino-yogurt",
         nome: "Yogurt greco senza lattosio",
         tipo: "spuntino",
