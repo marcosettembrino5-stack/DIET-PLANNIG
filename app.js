@@ -113,6 +113,7 @@
     renderInfo();
     renderRecipes();
     renderSpesa();
+    renderShared();
     renderReminderSettings();
     updateProgress();
   }
@@ -520,8 +521,9 @@
   // ============================================================
   const GLASS_ML = 200;
   function waterGoalMl() {
-    // 1.8 L default; provo a leggere dalle abitudini se presente un numero
-    return 1800;
+    // usa l'obiettivo del profilo se definito (Marco 2.5L, Caterina 1.8L)
+    const diet = DIETE[currentProfile];
+    return (diet && typeof diet.acquaMl === "number") ? diet.acquaMl : 1800;
   }
   function renderWater() {
     const goal = waterGoalMl();
@@ -559,30 +561,194 @@
   }
 
   // ============================================================
+  //  VISTA CONDIVISA (INSIEME)
+  // ============================================================
+  let sharedDate = todayKey();
+
+  // Legge i dati di un giorno per un profilo specifico (senza crearlo)
+  function dayDataOf(profileKey, dateKey) {
+    const p = state.profiles[profileKey];
+    if (!p || !p.days || !p.days[dateKey]) return { meals: {}, habits: {}, extras: [] };
+    return p.days[dateKey];
+  }
+
+  // Verifica se un testo alimento è da evitare per un profilo (lista "evita")
+  function isForbidden(diet, testo) {
+    if (!diet || !diet.evita || !testo) return false;
+    const t = String(testo).toLowerCase();
+    return diet.evita.parole.some((w) => t.includes(w));
+  }
+
+  // Suggerisce un'alternativa senza glutine dalla stessa categoria del profilo Marco
+  function glutenFreeAlternative(marcoDiet, catKey) {
+    const cat = marcoDiet.categorie && marcoDiet.categorie[catKey];
+    if (!cat) return null;
+    // la prima opzione dei cereali di Marco è già senza glutine (riso/mais/quinoa)
+    return cat.opzioni[0] || null;
+  }
+
+  function renderShared() {
+    const cont = $("#sharedMeals");
+    if (!cont) return;
+    cont.innerHTML = "";
+    $("#sharedDate").textContent = sharedDate === todayKey() ? "Oggi" : formatLong(sharedDate);
+
+    const marco = DIETE.marco, caterina = DIETE.caterina;
+    if (!marco || !caterina) {
+      cont.appendChild(el("div", "section-hint", "Servono entrambi i profili Marco e Caterina."));
+      return;
+    }
+
+    const dM = dayDataOf("marco", sharedDate);
+    const dC = dayDataOf("caterina", sharedDate);
+
+    // Coppie di pasti da confrontare (chiave Marco, chiave Caterina, titolo, icona)
+    const coppie = [
+      { m: "colazione", c: "colazione", titolo: "Colazione", icona: "☕" },
+      { m: "pranzo", c: "pranzo", titolo: "Pranzo", icona: "🍽️" },
+      { m: "cena", c: "cena", titolo: "Cena", icona: "🌙" },
+      { m: "spuntinoDopoCena", c: "spuntinoPomeriggio", titolo: "Spuntino", icona: "🍫" }
+    ];
+
+    let anyContent = false;
+
+    coppie.forEach((cp) => {
+      const mMeal = marco.pasti[cp.m];
+      const cMeal = caterina.pasti[cp.c];
+      const mSaved = dM.meals[cp.m] || {};
+      const cSaved = dC.meals[cp.c] || {};
+
+      const rows = [];
+
+      if (mMeal && mMeal.composizione) {
+        // pasto composto: confronta slot per slot (cereali/secondi/ortaggi)
+        mMeal.composizione.forEach((catKey) => {
+          const mVal = mSaved[catKey];
+          const cVal = cSaved[catKey];
+          if (!mVal && !cVal) return;
+          const label = (marco.categorie[catKey] && marco.categorie[catKey].titolo) || catKey;
+          rows.push(buildSharedRow(marco, caterina, catKey, label, mVal, cVal));
+        });
+      } else {
+        // pasto a scelta singola
+        const mVal = mSaved.scelta;
+        const cVal = cSaved.scelta;
+        if (mVal || cVal) rows.push(buildSharedRow(marco, caterina, null, "Scelta", mVal, cVal));
+      }
+
+      if (!rows.length) return;
+      anyContent = true;
+
+      const card = el("div", "shared-meal");
+      const head = el("div", "shared-meal-head");
+      head.appendChild(el("span", "sm-icon", cp.icona));
+      head.appendChild(el("span", "sm-title", cp.titolo));
+      card.appendChild(head);
+      const body = el("div", "shared-rows");
+      rows.forEach((r) => body.appendChild(r));
+      card.appendChild(body);
+      cont.appendChild(card);
+    });
+
+    if (!anyContent) {
+      cont.appendChild(el("div", "section-hint",
+        "Nessun pasto ancora compilato per questo giorno. Compila i pasti nei profili Marco e Caterina (tab Oggi) e qui li vedrai affiancati."));
+    } else {
+      cont.appendChild(el("div", "shared-legend",
+        "⚠️ = alimento non adatto a Marco (glutine/allergeni): usa l'alternativa indicata."));
+    }
+  }
+
+  // Costruisce una riga della vista condivisa per uno slot.
+  // Le scelte di Marco vengono dalla SUA dieta (già senza glutine): sempre ok.
+  // Le scelte di Caterina, se contengono alimenti vietati a Marco, vengono
+  // segnalate con l'alternativa senza glutine da usare per lui.
+  function buildSharedRow(marco, caterina, catKey, label, mVal, cVal) {
+    const row = el("div", "shared-row");
+    row.appendChild(el("div", "shared-food", label));
+    const portions = el("div", "shared-portions");
+
+    // Marco (dalla sua dieta, sempre adatto)
+    const pM = el("div", "portion");
+    pM.appendChild(el("span", "p-who", "Marco"));
+    pM.appendChild(el("span", "p-qta", mVal || "—"));
+    portions.appendChild(pM);
+
+    // Caterina
+    const cForbiddenForMarco = cVal && isForbidden(marco, cVal);
+    const pC = el("div", "portion" + (cForbiddenForMarco ? " warn" : ""));
+    pC.appendChild(el("span", "p-who", "Caterina"));
+    pC.appendChild(el("span", "p-qta", cVal || "—"));
+    // Se il piatto di Caterina non va bene per Marco e lui non ha una sua scelta,
+    // suggerisci l'alternativa senza glutine.
+    if (cForbiddenForMarco && catKey && !mVal) {
+      const alt = glutenFreeAlternative(marco, catKey);
+      if (alt) pC.appendChild(el("span", "p-alt", "⚠️ per Marco: " + alt));
+    }
+    portions.appendChild(pC);
+
+    row.appendChild(portions);
+    return row;
+  }
+
+  // ============================================================
   //  LISTA DELLA SPESA
   // ============================================================
-  function renderSpesa() {
-    const diet = DIETE[currentProfile];
-    const shop = profData().shopping;
+  let spesaScope = "solo"; // "solo" (profilo corrente) o "condivisa" (Marco + Caterina)
 
-    // Ricette selezionate
+  // Ritorna coppie {profileKey, recipeId} in base allo scope selezionato
+  function spesaSelezione() {
+    if (spesaScope === "condivisa") {
+      const out = [];
+      ["marco", "caterina"].forEach((pk) => {
+        const pr = state.profiles[pk];
+        if (pr && pr.shopping && pr.shopping.recipes) {
+          pr.shopping.recipes.forEach((id) => out.push({ profileKey: pk, recipeId: id }));
+        }
+      });
+      return out;
+    }
+    return profData().shopping.recipes.map((id) => ({ profileKey: currentProfile, recipeId: id }));
+  }
+
+  function findRecipe(profileKey, recipeId) {
+    const diet = DIETE[profileKey];
+    return diet && (diet.ricette || []).find((x) => x.id === recipeId);
+  }
+
+  function renderSpesa() {
+    // etichetta scope "solo <profilo>"
+    const nameEl = $("#spesaScopeName");
+    if (nameEl) nameEl.textContent = DIETE[currentProfile].nome;
+
+    const shop = profData().shopping;
+    const selezione = spesaSelezione();
+
+    // Ricette selezionate (chip)
     const sel = $("#spesaSelected");
     sel.innerHTML = "";
-    if (!shop.recipes.length) {
-      sel.appendChild(el("div", "section-hint", "Nessuna ricetta selezionata. Tocca “Aggiungi ricette”."));
+    if (!selezione.length) {
+      const msg = spesaScope === "condivisa"
+        ? "Nessuna ricetta nelle liste di Marco e Caterina. Aggiungine dai rispettivi profili o qui."
+        : "Nessuna ricetta selezionata. Tocca “Aggiungi ricette”.";
+      sel.appendChild(el("div", "section-hint", msg));
     } else {
-      shop.recipes.forEach((id, idx) => {
-        const r = (diet.ricette || []).find((x) => x.id === id);
+      selezione.forEach((item) => {
+        const r = findRecipe(item.profileKey, item.recipeId);
         if (!r) return;
         const chip = el("div", "spesa-chip");
         chip.appendChild(el("div", "recipe-icon", r.icona || "🍽️"));
         const nm = el("div", "sc-name");
         nm.appendChild(el("div", null, r.nome));
-        nm.appendChild(el("div", "sc-tag", r.tipo));
+        nm.appendChild(el("div", "sc-tag", spesaScope === "condivisa"
+          ? (DIETE[item.profileKey].nome + " · " + r.tipo)
+          : r.tipo));
         chip.appendChild(nm);
         const del = el("button", "sc-del", "🗑");
         del.addEventListener("click", () => {
-          shop.recipes.splice(idx, 1);
+          const pr = state.profiles[item.profileKey];
+          const i = pr.shopping.recipes.indexOf(item.recipeId);
+          if (i >= 0) pr.shopping.recipes.splice(i, 1);
           saveState();
           renderSpesa();
         });
@@ -594,7 +760,7 @@
     // Ingredienti aggregati
     const listBox = $("#spesaList");
     listBox.innerHTML = "";
-    const aggregated = aggregateIngredients(diet, shop.recipes);
+    const aggregated = aggregateIngredients(selezione);
     if (!aggregated.length) {
       listBox.appendChild(el("div", "section-hint", "La lista ingredienti apparirà qui."));
       return;
@@ -603,7 +769,10 @@
       const checked = !!shop.checked[item.key];
       const row = el("div", "spesa-item" + (checked ? " checked" : ""));
       row.appendChild(el("div", "si-check", "✓"));
-      row.appendChild(el("div", "si-name", item.nome));
+      const nameWrap = el("div", "si-name");
+      nameWrap.appendChild(el("span", null, item.nome));
+      if (item.gf) nameWrap.appendChild(el("span", "si-tag", "senza glutine"));
+      row.appendChild(nameWrap);
       row.appendChild(el("div", "si-qta", item.display));
       row.addEventListener("click", () => {
         shop.checked[item.key] = !shop.checked[item.key];
@@ -614,15 +783,17 @@
     });
   }
 
-  // Aggrega ingredienti sommando le quantità con la stessa unità
-  function aggregateIngredients(diet, recipeIds) {
-    const map = {}; // key -> { nome, byUnit: {unit: number}, testo: [] }
-    recipeIds.forEach((id) => {
-      const r = (diet.ricette || []).find((x) => x.id === id);
+  // Aggrega ingredienti sommando le quantità con la stessa unità.
+  // Accetta una lista di { profileKey, recipeId }.
+  function aggregateIngredients(selezione) {
+    const map = {}; // key -> { nome, byUnit, testi, gf }
+    selezione.forEach((sel) => {
+      const r = findRecipe(sel.profileKey, sel.recipeId);
       if (!r) return;
       (r.ingredienti || []).forEach((ing) => {
         const key = (ing.nome || "").toLowerCase().trim();
-        if (!map[key]) map[key] = { nome: ing.nome, byUnit: {}, testi: [] };
+        if (!map[key]) map[key] = { nome: ing.nome, byUnit: {}, testi: [], gf: false };
+        if (r.senzaGlutine) map[key].gf = true;
         const parsed = parseQta(ing.qta);
         if (parsed) {
           map[key].byUnit[parsed.unit] = (map[key].byUnit[parsed.unit] || 0) + parsed.value;
@@ -642,7 +813,7 @@
       // aggiungi testi non numerici unici
       const testiUnici = [...new Set(m.testi)];
       testiUnici.forEach((t) => { if (t && !/^q\.?b\.?$/i.test(t)) parts.push(t); });
-      return { key, nome: m.nome, display: parts.length ? parts.join(" + ") : "q.b." };
+      return { key, nome: m.nome, display: parts.length ? parts.join(" + ") : "q.b.", gf: m.gf };
     }).sort((a, b) => a.nome.localeCompare(b.nome));
   }
 
@@ -1257,6 +1428,7 @@
     if (btn) btn.classList.add("active");
     if (tab === "peso") renderWeight();  // ridisegna il canvas quando visibile
     if (tab === "stats") renderStats();  // calcola le statistiche all'apertura
+    if (tab === "insieme") renderShared();
     window.scrollTo(0, 0);
   }
 
@@ -1303,16 +1475,45 @@
     // Ricerca ricette
     $("#recipeSearch").addEventListener("input", (e) => { recipeSearch = e.target.value; renderRecipes(); });
 
+    // Vista condivisa: navigazione giorni
+    $("#prevDayShared").addEventListener("click", () => {
+      sharedDate = shiftDate(sharedDate, -1);
+      renderShared();
+    });
+    $("#nextDayShared").addEventListener("click", () => {
+      if (sharedDate === todayKey()) return;
+      sharedDate = shiftDate(sharedDate, 1);
+      renderShared();
+    });
+
     // Lista spesa
     $("#spesaPickBtn").addEventListener("click", openSpesaPicker);
     $("#spesaModalClose").addEventListener("click", closeSpesaPicker);
     $("#spesaModal .modal-backdrop").addEventListener("click", closeSpesaPicker);
     $("#spesaClearBtn").addEventListener("click", () => {
-      if (!confirm("Svuotare la lista della spesa?")) return;
-      const shop = profData().shopping;
-      shop.recipes = []; shop.checked = {};
+      if (spesaScope === "condivisa") {
+        if (!confirm("Svuotare le liste di Marco e Caterina?")) return;
+        ["marco", "caterina"].forEach((pk) => {
+          const pr = state.profiles[pk];
+          if (pr && pr.shopping) { pr.shopping.recipes = []; pr.shopping.checked = {}; }
+        });
+      } else {
+        if (!confirm("Svuotare la lista della spesa?")) return;
+        const shop = profData().shopping;
+        shop.recipes = []; shop.checked = {};
+      }
       saveState();
       renderSpesa();
+    });
+
+    // Scope spesa (solo / condivisa)
+    document.querySelectorAll("#spesaScope .scope-chip").forEach((c) => {
+      c.addEventListener("click", () => {
+        document.querySelectorAll("#spesaScope .scope-chip").forEach((x) => x.classList.remove("active"));
+        c.classList.add("active");
+        spesaScope = c.dataset.scope || "solo";
+        renderSpesa();
+      });
     });
 
     // Statistiche: range

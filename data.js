@@ -1217,12 +1217,310 @@ const DIETE = {
         applica: { scelta: 3 }
       }
     ]
+  },
+
+  /* ---------------------------------------------------------
+     PROFILO: MARCO
+     Fonte: Dott.ssa Loredana Vesci - 22 settembre 2026
+     Modello mediterraneo 1600 kcal/die, SENZA GLUTINE.
+     Reattività a grano (classe 3) e graminacee (classe 4):
+     vedi lista "evita" per gli alimenti da escludere.
+     --------------------------------------------------------- */
+  marco: {
+    nome: "Marco",
+    dottoressa: "Dott.ssa Loredana Vesci",
+    data: "22 settembre 2026",
+    kcal: 1600,
+    macros: { carboidrati: 43, proteine: 24, grassi: 33 },
+    pesoAttuale: 93.6,
+    pesoObiettivo: 79,
+    altezza: 174,
+
+    pastoLiberoOgniGiorni: 20,
+    maxCerealiGiornalieri: 140,
+
+    premessa: "BMI 30.9 (obesità di I grado). Massa muscolare 63.9 kg in 174 cm, struttura robusta. Grasso sottocutaneo metainfiammato 28.2%, grasso viscerale in accumulo (grado 11). Peso attuale 93.6 kg, obiettivo 79 kg. Reattività a graminacee (classe 4) e grano triticum (classe 3). Vitamina D insufficiente. Turnista. Modello mediterraneo allo 0.01% di lattosio, senza glutine.",
+
+    // Lista alimenti da evitare (allergeni + cross-reattivi).
+    // Usata dalla vista condivisa per segnalare/sostituire.
+    evita: {
+      titolo: "Alimenti da evitare (reattività grano + graminacee)",
+      // parole chiave cercate negli alimenti/ingredienti (lowercase)
+      parole: [
+        "glutine", "grano", "frumento", "pasta", "pane", "pizza", "biscott",
+        "fette biscottate", "gallett", "cracker", "wasa", "tortellini",
+        "ravioli", "agnolotti", "lasagna", "gnocch", "cous cous", "couscous",
+        "orzo", "farro", "semolino", "muesli", "avena",
+        "pomodor", "melanzan", "peperon", "patate", "patata",
+        "agrumi", "arance", "arancia", "limon", "mandarin", "mapo",
+        "kiwi", "anguria", "melone", "fragol", "pesche", "albicocch", "prugn", "ciliegi",
+        "mandorl", "pistacch", "arachid", "noccioline",
+        "funghi", "spinaci", "piselli", "basilico", "camomilla",
+        "mollusch", "crostace", "cozze", "vongole", "gamber", "lumach",
+        "birra"
+      ],
+      note: "In caso di dubbio, preferire farine tollerate (riso, mais, quinoa, tapioca, castagna, soia) e alimenti senza glutine."
+    },
+
+    regoleGenerali: [
+      "Bere 2.5 L di acqua al giorno.",
+      "Camminare tutti i giorni 30 min consecutivi (tapis roulant o strada): unica pratica riconosciuta anti grasso viscerale.",
+      "Salare poco con sale iodato, marino o rosa.",
+      "Cuocere a vapore, griglia, forno o microonde.",
+      "Fritti ogni tanto con olio EVO (punto di fumo 180°C).",
+      "1 cucchiaio di olio EVO a pranzo + 1 a cena.",
+      "Dormire 6-8 ore al giorno.",
+      "I pesi dei cibi sono a crudo, al netto degli scarti.",
+      "Evacuazione irregolare: 1 grano di lunga vita Fiuggi la sera.",
+      "Fame fuori pasto: ortaggi consentiti + 1 uovo sodo.",
+      "No birra. Ogni tanto un bicchiere di vino. Se beve vino prima dei 20 gg, dimezzare i cereali tra pranzo e cena (140 g).",
+      "Pasto libero ogni 20 giorni (shock metabolico, es. pizza o alimenti con grano esclusi).",
+      "Se esce spesso: seguire la dieta senza superare 140 g di cereali tra pranzo e cena; può aumentare i secondi.",
+      "Assumere vitamina D (2000 UI/die per 3 mesi, Ibsa in film).",
+      "SENZA GLUTINE: al posto di pasta/pane usare gli stessi alimenti con farine tollerate (riso, mais, quinoa, tapioca, castagna, soia)."
+    ],
+
+    pasti: {
+      colazione: {
+        titolo: "Colazione",
+        icona: "☕",
+        istruzioni: "Latte di soia/riso/cocco o yogurt di soia/cocco/accadì o kefir senza lattosio + UNA opzione. Fino a 3 colazioni/die entro le 14.",
+        note: "Caffè senza zucchero. Se ha ancora fame: 1 uovo (sodo, coque o strapazzato).",
+        opzioni: [
+          "3 cucchiai di fiocchi di riso + 100 g di frutta consentita (papaia, mango, cocco, avocado, caki, fichi d'india, datteri, uva, ananas, banana, mela, pera, frutti di bosco, melagrana)",
+          "3 cucchiai di fiocchi di mais + 100 g di frutta consentita",
+          "3 cucchiai di fiocchi di quinoa + 100 g di frutta consentita",
+          "3 biscotti con farine tollerate (riso, tapioca, soia, castagna, senza glutine) + 100 g di frutta consentita",
+          "20 g di pane senza glutine con velo di formaggio o marmellata senza zucchero + 100 g di frutta consentita"
+        ]
+      },
+      pranzo: {
+        titolo: "Pranzo",
+        icona: "🍽️",
+        istruzioni: "1 cereale (senza glutine) + 1 secondo + ortaggi a volontà. 1 cucchiaio di olio EVO.",
+        composizione: ["cereali", "secondi", "ortaggi"]
+      },
+      cena: {
+        titolo: "Cena",
+        icona: "🌙",
+        istruzioni: "1 cereale (senza glutine) + 1 secondo + ortaggi a volontà. 1 cucchiaio di olio EVO.",
+        composizione: ["cereali", "secondi", "ortaggi"]
+      },
+      spuntinoDopoCena: {
+        titolo: "Spuntino dopo cena",
+        icona: "🌜",
+        istruzioni: "UNA scelta. NO cereali di alcun tipo.",
+        opzioni: [
+          "Spremuta di melagrana o succo di mirtillo",
+          "Una manciata di lupini",
+          "Coppetta media di gelato (frutta consentita e cioccolato fondente)",
+          "Una manciata di olive verdi o nere",
+          "20 g di parmigiano",
+          "Un cappuccino di soia o latte di cocco",
+          "1 yogurt senza lattosio (soia, cocco o altro)",
+          "1 yogurt kefir o greco senza lattosio",
+          "20 g di cioccolato fondente",
+          "20 g di semi oleosi (zucca, girasole, pinoli, nocciole, noci)",
+          "40 g di frutta disidratata (mirtilli, lamponi, datteri, papaia, zenzero, chips di mela, banana)"
+        ]
+      }
+    },
+
+    categorie: {
+      cereali: {
+        titolo: "Cereale (senza glutine)",
+        icona: "🌾",
+        istruzioni: "Scegli UNO. Solo cereali senza glutine.",
+        opzioni: [
+          "70 g di riso (parboiled, nero...), pasta di mais/riso, amaranto, quinoa, tapioca, manioca o pasta senza glutine",
+          "70 g di mais",
+          "70 g di piadina senza glutine",
+          "70 g di farina di mais (polenta)",
+          "70 g di pane con farina tollerata (anche per celiaci)",
+          "6 gallette di riso/mais o 6 cracker senza glutine"
+        ]
+      },
+      secondi: {
+        titolo: "Secondo",
+        icona: "🍗",
+        istruzioni: "Scegli UNO (anche metà e metà).",
+        opzioni: [
+          "120 g di carne rossa (vitello, manzo, ovino, caprino, maiale)",
+          "120 g di carne bianca (pollo, tacchino, coniglio)",
+          "2 uova",
+          "150 g di pesce di qualsiasi tipo o 5 bastoncini al forno senza glutine",
+          "120 g di formaggio fresco/caciottine (brie, toma, ricotta, asiago, caciocavallo, caciotta, emmenthal, stracchino, mozzarella, feta, primo sale senza lattosio...)",
+          "100 g di affettati (cotto, crudo, bresaola, fesa di tacchino...)",
+          "120 g di hamburger di soia, tofu o tempeh",
+          "40 g di legumi ad alto carico proteico (ceci, lenticchie, fagioli, soia - NO piselli) oppure 120 g già cotti",
+          "120 g di lupini",
+          "1 yogurt kefir o greco senza lattosio"
+        ]
+      },
+      ortaggi: {
+        titolo: "Ortaggi",
+        icona: "🥦",
+        istruzioni: "A volontà, crudi o cotti o come passato. (Evitare pomodoro, melanzane, peperoni, patate, funghi, spinaci per cross-reattività.)",
+        opzioni: [
+          "Zucchine, ravanelli, rape rosse, rucola, indivia, scarola, songino, bietola, cavolo nero, broccoletti, cicoria, carote, finocchi, radicchio, puntarelle...",
+          "Passato di verdure consentite"
+        ]
+      }
+    },
+
+    noteCereali: "Può spostare i cereali nella giornata: es. 140 g a pranzo e 0 la sera, oppure 100 g a pranzo e 40 g la sera (max 140 g totali). Non saltare i pasti. Se non mangia il secondo a pranzo, aggiungerlo alla cena (anche due diversi).",
+
+    abitudini: [
+      { id: "acqua", label: "Bere 2.5 L di acqua", icona: "💧" },
+      { id: "camminata", label: "Camminare 30 min", icona: "🚶" },
+      { id: "olioPranzo", label: "Olio EVO a pranzo", icona: "🫒" },
+      { id: "olioCena", label: "Olio EVO a cena", icona: "🫒" },
+      { id: "vitaminaD", label: "Vitamina D (2000 UI)", icona: "☀️" },
+      { id: "sonno", label: "Dormire 6-8 ore", icona: "😴" }
+    ],
+
+    // Acqua: obiettivo 2.5 L
+    acquaMl: 2500,
+
+    kcalTabella: {
+      colazione: [280, 280, 290, 260, 240],
+      spuntinoDopoCena: [90, 90, 150, 90, 80, 110, 90, 90, 110, 120, 130],
+      cereali: [250, 250, 240, 250, 240, 190],
+      secondi: [230, 200, 155, 210, 320, 170, 200, 130, 180, 90],
+      ortaggi: [40, 45]
+    },
+
+    ricette: [
+      {
+        id: "m-riso-pollo-zucchine",
+        nome: "Riso con pollo e zucchine",
+        tipo: "pranzo",
+        icona: "🍚",
+        kcal: 470,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua del riso",
+        ingredienti: [
+          { nome: "Riso", qta: "70 g" },
+          { nome: "Petto di pollo", qta: "120 g" },
+          { nome: "Zucchine", qta: "a volontà" },
+          { nome: "Prezzemolo / pepe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il riso con 1 pizzico di sale.",
+          "Salta le zucchine a rondelle con poco olio.",
+          "Aggiungi il pollo a straccetti e cuoci finché dorato.",
+          "Unisci al riso e completa con prezzemolo."
+        ],
+        applica: { cereali: 0, secondi: 1, ortaggi: 0 }
+      },
+      {
+        id: "m-polenta-formaggio",
+        nome: "Polenta con formaggio e verdure",
+        tipo: "cena",
+        icona: "🌽",
+        kcal: 460,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nella polenta",
+        ingredienti: [
+          { nome: "Farina di mais (polenta)", qta: "70 g" },
+          { nome: "Formaggio fresco", qta: "120 g" },
+          { nome: "Cicoria o broccoletti", qta: "a volontà" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Prepara la polenta con acqua e 1 pizzico di sale.",
+          "Salta le verdure in padella con poco olio.",
+          "Servi la polenta con il formaggio a pezzetti e le verdure."
+        ],
+        applica: { cereali: 3, secondi: 4, ortaggi: 0 }
+      },
+      {
+        id: "m-quinoa-ceci",
+        nome: "Quinoa con ceci e verdure",
+        tipo: "pranzo",
+        icona: "🥗",
+        kcal: 430,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) a fine cottura",
+        ingredienti: [
+          { nome: "Quinoa", qta: "70 g" },
+          { nome: "Ceci cotti", qta: "120 g" },
+          { nome: "Carote e zucchine", qta: "a volontà" },
+          { nome: "Cumino / prezzemolo", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Sciacqua e lessa la quinoa con 1 pizzico di sale.",
+          "Salta le verdure a dadini in padella.",
+          "Unisci quinoa, ceci e verdure, condisci con olio a crudo."
+        ],
+        applica: { cereali: 0, secondi: 7, ortaggi: 0 }
+      },
+      {
+        id: "m-pesce-gallette",
+        nome: "Pesce al forno con gallette e verdure",
+        tipo: "cena",
+        icona: "🐟",
+        kcal: 420,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) sul pesce",
+        ingredienti: [
+          { nome: "Pesce (spigola/orata/merluzzo)", qta: "150 g" },
+          { nome: "Gallette di riso/mais", qta: "6" },
+          { nome: "Zucchine e finocchi", qta: "a volontà" },
+          { nome: "Prezzemolo", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Cuoci il pesce al forno con un pizzico di sale e prezzemolo.",
+          "Cuoci le verdure al vapore o in padella.",
+          "Servi con le gallette."
+        ],
+        applica: { cereali: 5, secondi: 3, ortaggi: 0 }
+      },
+      {
+        id: "m-colazione-riso-frutta",
+        nome: "Fiocchi di riso con frutta",
+        tipo: "colazione",
+        icona: "🥣",
+        kcal: 280,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere" },
+          { nome: "Fiocchi di riso", qta: "3 cucchiai" },
+          { nome: "Frutta consentita (banana, frutti di bosco...)", qta: "100 g" }
+        ],
+        preparazione: [
+          "Versa il latte vegetale in una ciotola.",
+          "Aggiungi i fiocchi di riso e la frutta a pezzi."
+        ],
+        applica: { scelta: 0 }
+      },
+      {
+        id: "m-spuntino-fondente",
+        nome: "Cioccolato fondente e semi",
+        tipo: "spuntino",
+        icona: "🍫",
+        kcal: 130,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Cioccolato fondente", qta: "20 g" },
+          { nome: "Semi oleosi (zucca, girasole, noci)", qta: "una piccola porzione" }
+        ],
+        preparazione: [
+          "Uno spuntino post-cena goloso ma senza cereali."
+        ],
+        applica: { scelta: 8 }
+      }
+    ]
   }
 
   /* ---------------------------------------------------------
-     PROFILO: (LA TUA DIETA - da aggiungere lunedì)
-     Copiare il blocco "caterina" qui sotto, rinominare la
-     chiave (es. "matteo") e sostituire i contenuti.
+     Per aggiungere altri profili, copiare un blocco esistente,
+     rinominare la chiave e sostituire i contenuti.
      --------------------------------------------------------- */
 
 };

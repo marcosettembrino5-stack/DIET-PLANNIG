@@ -8,8 +8,9 @@ Web app mobile-first per seguire la dieta personalizzata, con sistema a scambi, 
 2. In alto scegli il profilo (per ora: **Caterina**).
 3. Tab in basso:
    - **📅 Oggi** – spunta i pasti. Per pranzo/cena scegli cereale + secondo + ortaggi (sistema a scambi). Vedi la stima dei cereali giornalieri (max 120 g), il **budget calorie** con le kcal rimaste, e puoi aggiungere **pasti extra** con le calorie prese dalla confezione.
+   - **👥 Insieme** – vista condivisa Marco + Caterina: stesso pasto, porzioni per ciascuno. Gli alimenti non adatti a Marco (senza glutine / allergeni grano e graminacee) sono segnalati con ⚠️ e l'alternativa senza glutine.
    - **📖 Ricette** – ricettario con piatti pronti per ogni pasto: ingredienti, quantità (incluso il sale) e preparazione. **Cerca** per nome o ingrediente, segna le **preferite** con la stella. Tocca una ricetta per applicarla al giorno (compila il pasto e conta le calorie).
-   - **🛒 Spesa** – scegli le ricette e l'app genera la **lista della spesa aggregata** (somma le quantità con la stessa unità, es. "Pasta 120 g"). Spuntabile al supermercato.
+   - **🛒 Spesa** – scegli le ricette e l'app genera la **lista della spesa aggregata** (somma le quantità con la stessa unità, es. "Pasta 120 g"). Modalità **Solo** (profilo corrente) o **Condivisa** (Marco + Caterina insieme). Spuntabile al supermercato.
    - **📊 Statistiche** – aderenza pasti, media calorie, giorni con abitudini complete, variazione peso, su 7 o 30 giorni. Con grafico calorie e barre per giorno.
    - **✅ Abitudini** – contatore **acqua a bicchieri** (tocchi +1 fino a 1.8 L), abitudini del giorno e contatore **pasto libero** (ogni 20 giorni).
    - **⚖️ Peso** – aggiungi il peso, vedi il grafico verso l'obiettivo (60 kg).

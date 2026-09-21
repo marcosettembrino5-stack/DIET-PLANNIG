@@ -136,10 +136,26 @@
       <div id="recipesContainer" class="recipes-container"></div>
     </section>
 
+    <!-- TAB: INSIEME (vista condivisa) -->
+    <section id="tab-insieme" class="tab-panel">
+      <h2 class="section-title">Insieme 👥</h2>
+      <p class="section-hint">Stesso pasto, porzioni diverse per Marco e Caterina. Gli alimenti non adatti a Marco (senza glutine / allergeni) sono segnalati con l'alternativa.</p>
+      <div class="day-bar">
+        <button id="prevDayShared" class="day-nav" aria-label="Giorno precedente">‹</button>
+        <div class="day-label"><span id="sharedDate">Oggi</span></div>
+        <button id="nextDayShared" class="day-nav" aria-label="Giorno successivo">›</button>
+      </div>
+      <div id="sharedMeals" class="shared-meals"></div>
+    </section>
+
     <!-- TAB: SPESA -->
     <section id="tab-spesa" class="tab-panel">
       <h2 class="section-title">Lista della spesa</h2>
       <p class="section-hint">Scegli le ricette che vuoi preparare: l'app somma gli ingredienti in un'unica lista da spuntare al supermercato.</p>
+      <div class="spesa-scope" id="spesaScope">
+        <button class="scope-chip active" data-scope="solo">Solo <span id="spesaScopeName">profilo</span></button>
+        <button class="scope-chip" data-scope="condivisa">Condivisa (Marco + Caterina)</button>
+      </div>
       <div class="spesa-actions">
         <button id="spesaPickBtn" class="btn-primary">＋ Aggiungi ricette</button>
         <button id="spesaClearBtn" class="btn-ghost">Svuota</button>
@@ -223,6 +239,7 @@
   <!-- NAV IN BASSO -->
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="oggi"><span>📅</span>Oggi</button>
+    <button class="nav-btn" data-tab="insieme"><span>👥</span>Insieme</button>
     <button class="nav-btn" data-tab="ricette"><span>📖</span>Ricette</button>
     <button class="nav-btn" data-tab="spesa"><span>🛒</span>Spesa</button>
     <button class="nav-btn" data-tab="stats"><span>📊</span>Statistiche</button>

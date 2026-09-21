@@ -611,3 +611,54 @@ html, body {
   width: 22px; height: 22px; accent-color: var(--green);
 }
 .reminder-enable { width: 100%; margin-top: 12px; padding: 13px; }
+
+/* ============================================================
+   VISTA CONDIVISA (INSIEME) + SPESA CONDIVISA
+   ============================================================ */
+
+.shared-meals { display: flex; flex-direction: column; gap: 14px; }
+.shared-meal {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.shared-meal-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; background: var(--green-light);
+}
+.shared-meal-head .sm-icon { font-size: 1.3rem; }
+.shared-meal-head .sm-title { font-weight: 700; color: var(--green-dark); }
+.shared-rows { padding: 6px 12px 12px; }
+.shared-row {
+  padding: 10px 4px; border-bottom: 1px solid var(--border);
+}
+.shared-row:last-child { border-bottom: none; }
+.shared-food { font-weight: 600; font-size: 0.92rem; margin-bottom: 6px; }
+.shared-portions { display: flex; gap: 8px; }
+.portion {
+  flex: 1; border-radius: 10px; padding: 8px 10px; font-size: 0.85rem;
+  background: var(--bg); border: 1px solid var(--border);
+}
+.portion .p-who { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-soft); display: block; }
+.portion .p-qta { font-weight: 700; color: var(--green-dark); }
+.portion.warn { border-color: #f3c2c9; background: #fdf0f2; }
+html[data-theme="dark"] .portion.warn { background: #3a2529; border-color: #6b3b42; }
+.portion.warn .p-qta { color: var(--danger); }
+.portion .p-alt { display: block; font-size: 0.75rem; color: var(--text-soft); margin-top: 3px; }
+.shared-badge {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px; margin-left: 6px;
+  background: #fdecc8; color: #8a5a10;
+}
+.shared-legend { font-size: 0.78rem; color: var(--text-soft); margin: 12px 4px 0; }
+
+/* selettore scope spesa */
+.spesa-scope { display: flex; gap: 8px; margin-bottom: 12px; }
+.scope-chip {
+  flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--text-soft);
+  border-radius: 12px; padding: 10px 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.scope-chip.active { background: var(--green); color: #fff; border-color: var(--green); }
+.spesa-item .si-tag {
+  font-size: 0.68rem; padding: 2px 6px; border-radius: 8px;
+  background: var(--green-light); color: var(--green-dark); margin-left: 6px;
+}
