@@ -5,7 +5,7 @@
    il refresh della cache sui dispositivi.
    ============================================================ */
 
-const CACHE_VERSION = "nutriapp-v2";
+const CACHE_VERSION = "nutriapp-v3";
 const ASSETS = [
   "./",
   "./index.html",

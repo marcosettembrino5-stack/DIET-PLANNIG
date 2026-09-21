@@ -737,7 +737,6 @@
       const card = el("div", "week-day" + (dayIdx === oggiIdx ? " today" : ""));
       const head = el("div", "week-day-head");
       head.appendChild(el("span", null, day.giorno + (dayIdx === oggiIdx ? " · oggi" : "")));
-      // somma kcal del giorno (stima ricette)
       let kcalDay = 0;
       WEEK_SLOTS.forEach((s) => { const r = recipeById(day[s.key]); if (r && r.kcal) kcalDay += r.kcal; });
       head.appendChild(el("span", "wd-kcal", kcalDay > 0 ? kcalDay + " kcal" : ""));
@@ -750,15 +749,91 @@
         const info = el("div", "wm-info");
         info.appendChild(el("div", "wm-slot", slot.label));
         info.appendChild(el("div", "wm-name", r ? r.nome : "— tocca per scegliere"));
-        if (r && r.kcal) info.appendChild(el("div", "wm-portions", r.kcal + " kcal · senza glutine"));
+        if (r) {
+          const hasVar = recipeHasVariant(r);
+          const meta = el("div", "wm-portions");
+          meta.innerHTML = (r.kcal ? r.kcal + " kcal · " : "") +
+            (hasVar ? "<span class='wm-var'>👨 / 👩 varianti</span>" : "uguale per entrambi");
+          info.appendChild(meta);
+        }
         row.appendChild(info);
         row.appendChild(el("div", "wm-arrow", "›"));
-        row.addEventListener("click", () => openWeekPicker(dayIdx, slot));
+        // tocco = apri il dettaglio a due colonne (Marco/Caterina)
+        if (r) row.addEventListener("click", () => openSharedRecipe(r, dayIdx, slot));
+        else row.addEventListener("click", () => openWeekPicker(dayIdx, slot));
         card.appendChild(row);
       });
 
       cont.appendChild(card);
     });
+  }
+
+  // Verifica se una ricetta ha almeno un ingrediente con variante per Caterina
+  function recipeHasVariant(r) {
+    return (r.ingredienti || []).some((ing) => variantForIngredient(ing.nome) !== null);
+  }
+
+  // Ritorna la regola variante Caterina per un nome ingrediente, o null
+  function variantForIngredient(nome) {
+    if (typeof VARIANTI_CATERINA === "undefined") return null;
+    const t = (nome || "").toLowerCase();
+    for (const v of VARIANTI_CATERINA) {
+      if (v.match.some((w) => t.includes(w))) return v;
+    }
+    return null;
+  }
+
+  // Dettaglio ricetta a due colonne (Marco / Caterina) con varianti
+  function openSharedRecipe(r, dayIdx, slot) {
+    $("#recipeTitle").textContent = r.nome;
+    const body = $("#recipeBody");
+    body.innerHTML = "";
+
+    body.appendChild(el("div", "rb-kcal", (r.kcal || "?") + " kcal · " + (r.tipo || "") + " · senza glutine"));
+
+    // Intestazione due persone
+    const legend = el("div", "sr-legend");
+    legend.innerHTML = "<span class='sr-who marco'>👨 Marco</span><span class='sr-who cate'>👩 Caterina</span>";
+    body.appendChild(legend);
+
+    body.appendChild(el("div", "rb-section", "Ingredienti"));
+    const list = el("div", "sr-ings");
+    (r.ingredienti || []).forEach((ing) => {
+      const v = variantForIngredient(ing.nome);
+      const rowEl = el("div", "sr-ing" + (v ? " diff" : ""));
+      rowEl.appendChild(el("div", "sr-ing-name", ing.nome));
+      const cols = el("div", "sr-ing-cols");
+      // Marco (originale)
+      const cM = el("div", "sr-col marco");
+      cM.appendChild(el("span", "sr-qta", ing.qta || "q.b."));
+      cols.appendChild(cM);
+      // Caterina (variante se presente, altrimenti uguale)
+      const cC = el("div", "sr-col cate");
+      const cateNome = v && v.nome ? v.nome : null;
+      const cateQta = v && v.qta ? v.qta : (ing.qta || "q.b.");
+      cC.appendChild(el("span", "sr-qta", cateQta));
+      if (cateNome) cC.appendChild(el("span", "sr-altname", cateNome));
+      cols.appendChild(cC);
+      rowEl.appendChild(cols);
+      list.appendChild(rowEl);
+    });
+    body.appendChild(list);
+
+    body.appendChild(el("div", "rb-salt", "🧂 <b>Sale:</b> " + (r.sale || "a piacere, con moderazione")));
+
+    body.appendChild(el("div", "rb-section", "Preparazione"));
+    const ol = el("ol");
+    (r.preparazione || []).forEach((step) => ol.appendChild(el("li", null, step)));
+    body.appendChild(ol);
+
+    // Pulsante per cambiare la ricetta del giorno
+    if (dayIdx != null && slot) {
+      const btn = el("button", "rb-apply", "🔄 Cambia questo piatto");
+      btn.addEventListener("click", () => { closeRecipe(); openWeekPicker(dayIdx, slot); });
+      body.appendChild(btn);
+    }
+
+    $("#recipeModal").classList.remove("hidden");
   }
 
   // Sostituzione ricetta di uno slot: riusa la modale picker

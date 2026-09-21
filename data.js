@@ -1697,3 +1697,37 @@ const MENU_SETTIMANALE_DEFAULT = [
   { giorno: "Sabato",    colazione: "m-colazione-biscotti-gf",   pranzo: "m-riso-pollo-zucchine",  cena: "m-polenta-formaggio",       spuntino: "m-spuntino-fondente" },
   { giorno: "Domenica",  colazione: "m-colazione-riso-frutta",   pranzo: "m-pasta-mais-tonno",     cena: "m-uova-verdure-gallette",   spuntino: "m-spuntino-yogurt" }
 ];
+
+/* ============================================================
+   VARIANTI PER CATERINA (menù condiviso)
+   Le ricette del menù sono senza glutine (per Marco). Per Caterina
+   alcuni ingredienti hanno una versione diversa/consentita e le
+   porzioni cambiano. La vista Settimana usa queste regole per
+   mostrare la colonna di Caterina accanto a quella di Marco.
+
+   Ogni regola:
+   - match: parole (lowercase) cercate nel nome ingrediente
+   - nome:  come mostrare l'ingrediente per Caterina (se cambia)
+   - qta:   porzione per Caterina (se cambia); null = come Marco
+   ============================================================ */
+const VARIANTI_CATERINA = [
+  // Latte/derivati vegetali -> Caterina può usare la versione senza lattosio "normale"
+  { match: ["latte di soia", "latte vegetale", "latte di riso", "latte di cocco"], nome: "Latte senza lattosio (o vegetale)", qta: null },
+  { match: ["yogurt di soia", "yogurt di cocco"], nome: "Yogurt senza lattosio (anche normale)", qta: null },
+  // Cereali senza glutine -> Caterina può usarli con glutine (pasta/pane comuni)
+  { match: ["riso"], nome: "Riso o pasta/pane normali", qta: "60 g" },
+  { match: ["quinoa"], nome: "Quinoa, pasta o farro", qta: "60 g" },
+  { match: ["farina di mais", "polenta"], nome: "Polenta, pasta o pane", qta: "60 g" },
+  { match: ["pasta di mais", "pasta di riso", "pasta senza glutine"], nome: "Pasta normale", qta: "60 g" },
+  { match: ["gallette di riso", "gallette di mais", "gallette"], nome: "Gallette o pane normali", qta: "4 gallette / 60 g pane" },
+  { match: ["fiocchi di riso", "fiocchi di mais"], nome: "Fiocchi/muesli a piacere", qta: "3 cucchiai" },
+  { match: ["biscotti con farine tollerate", "biscotti senza glutine"], nome: "Biscotti normali", qta: "3" },
+  // Secondi -> Caterina ha porzioni un po' più piccole
+  { match: ["petto di pollo", "pollo"], nome: null, qta: "90 g" },
+  { match: ["manzo", "vitello"], nome: null, qta: "90 g" },
+  { match: ["pesce", "spigola", "orata", "merluzzo"], nome: null, qta: "100 g" },
+  { match: ["tonno"], nome: null, qta: "90 g (tonno/sgombro)" },
+  { match: ["formaggio"], nome: null, qta: "90 g" },
+  { match: ["ceci", "lenticchie", "fagioli"], nome: null, qta: "90 g cotti" }
+  // (uova, olio, verdure, frutta, semi, cioccolato: uguali per entrambi)
+];
