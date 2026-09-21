@@ -1402,7 +1402,7 @@ const DIETE = {
         ingredienti: [
           { nome: "Riso", qta: "70 g" },
           { nome: "Petto di pollo", qta: "120 g" },
-          { nome: "Zucchine", qta: "a volontà" },
+          { nome: "Zucchine", qta: "200 g" },
           { nome: "Prezzemolo / pepe", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
@@ -1425,7 +1425,7 @@ const DIETE = {
         ingredienti: [
           { nome: "Farina di mais (polenta)", qta: "70 g" },
           { nome: "Formaggio fresco", qta: "120 g" },
-          { nome: "Cicoria o broccoletti", qta: "a volontà" },
+          { nome: "Cicoria", qta: "200 g" },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
         preparazione: [
@@ -1446,7 +1446,8 @@ const DIETE = {
         ingredienti: [
           { nome: "Quinoa", qta: "70 g" },
           { nome: "Ceci cotti", qta: "120 g" },
-          { nome: "Carote e zucchine", qta: "a volontà" },
+          { nome: "Carote", qta: "100 g" },
+          { nome: "Zucchine", qta: "100 g" },
           { nome: "Cumino / prezzemolo", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
@@ -1466,9 +1467,10 @@ const DIETE = {
         senzaGlutine: true,
         sale: "1 pizzico di sale iodato (circa 1 g) sul pesce",
         ingredienti: [
-          { nome: "Pesce (spigola/orata/merluzzo)", qta: "150 g" },
+          { nome: "Orata (o spigola/merluzzo)", qta: "150 g" },
           { nome: "Gallette di riso/mais", qta: "6" },
-          { nome: "Zucchine e finocchi", qta: "a volontà" },
+          { nome: "Zucchine", qta: "150 g" },
+          { nome: "Finocchi", qta: "150 g" },
           { nome: "Prezzemolo", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
@@ -1488,9 +1490,9 @@ const DIETE = {
         senzaGlutine: true,
         sale: "Non serve sale",
         ingredienti: [
-          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere" },
-          { nome: "Fiocchi di riso", qta: "3 cucchiai" },
-          { nome: "Frutta consentita (banana, frutti di bosco...)", qta: "100 g" }
+          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere (200 ml)" },
+          { nome: "Fiocchi di riso", qta: "3 cucchiai (30 g)" },
+          { nome: "Banana", qta: "1 (circa 120 g)" }
         ],
         preparazione: [
           "Versa il latte vegetale in una ciotola.",
@@ -1508,7 +1510,7 @@ const DIETE = {
         sale: "Non serve sale",
         ingredienti: [
           { nome: "Cioccolato fondente", qta: "20 g" },
-          { nome: "Semi oleosi (zucca, girasole, noci)", qta: "una piccola porzione" }
+          { nome: "Noci", qta: "20 g" }
         ],
         preparazione: [
           "Uno spuntino post-cena goloso ma senza cereali."
@@ -1526,7 +1528,8 @@ const DIETE = {
         ingredienti: [
           { nome: "Riso", qta: "70 g" },
           { nome: "Manzo", qta: "120 g" },
-          { nome: "Zucchine e carote", qta: "a volontà" },
+          { nome: "Zucchine", qta: "100 g" },
+          { nome: "Carote", qta: "100 g" },
           { nome: "Rosmarino / pepe", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
@@ -1547,8 +1550,8 @@ const DIETE = {
         sale: "1 pizzico di sale iodato (circa 1 g)",
         ingredienti: [
           { nome: "Farina di mais (polenta)", qta: "70 g" },
-          { nome: "Pesce (merluzzo/orata)", qta: "150 g" },
-          { nome: "Cicoria o broccoletti", qta: "a volontà" },
+          { nome: "Merluzzo (o orata)", qta: "150 g" },
+          { nome: "Broccoletti", qta: "200 g" },
           { nome: "Prezzemolo", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
@@ -1570,7 +1573,7 @@ const DIETE = {
         ingredienti: [
           { nome: "Pasta di mais/riso", qta: "70 g" },
           { nome: "Tonno al naturale", qta: "120 g" },
-          { nome: "Zucchine", qta: "a volontà" },
+          { nome: "Zucchine", qta: "200 g" },
           { nome: "Prezzemolo / peperoncino", qta: "q.b." },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
@@ -1592,7 +1595,7 @@ const DIETE = {
         ingredienti: [
           { nome: "Uova", qta: "2" },
           { nome: "Gallette di riso/mais", qta: "6" },
-          { nome: "Bietola o cicoria", qta: "a volontà" },
+          { nome: "Bietola", qta: "200 g" },
           { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
         ],
         preparazione: [
@@ -1611,9 +1614,9 @@ const DIETE = {
         senzaGlutine: true,
         sale: "Non serve sale",
         ingredienti: [
-          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere" },
-          { nome: "Fiocchi di mais", qta: "3 cucchiai" },
-          { nome: "Frutta consentita (banana, uva, mela)", qta: "100 g" }
+          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere (200 ml)" },
+          { nome: "Fiocchi di mais", qta: "3 cucchiai (30 g)" },
+          { nome: "Mela", qta: "1 (circa 150 g)" }
         ],
         preparazione: [
           "Versa il latte vegetale, aggiungi i fiocchi di mais e la frutta a pezzi."
@@ -1629,9 +1632,9 @@ const DIETE = {
         senzaGlutine: true,
         sale: "Non serve sale",
         ingredienti: [
-          { nome: "Yogurt di soia/cocco senza lattosio", qta: "1 vasetto" },
+          { nome: "Yogurt di soia/cocco senza lattosio", qta: "1 vasetto (125 g)" },
           { nome: "Biscotti con farine tollerate (riso/castagna)", qta: "3" },
-          { nome: "Frutta consentita", qta: "100 g" }
+          { nome: "Pera", qta: "1 (circa 150 g)" }
         ],
         preparazione: [
           "Accompagna lo yogurt con i biscotti senza glutine e la frutta."
@@ -1663,8 +1666,8 @@ const DIETE = {
         senzaGlutine: true,
         sale: "Non serve sale",
         ingredienti: [
-          { nome: "Frutta disidratata (datteri, chips di mela)", qta: "40 g" },
-          { nome: "Semi oleosi", qta: "20 g" }
+          { nome: "Datteri", qta: "40 g" },
+          { nome: "Semi di zucca", qta: "20 g" }
         ],
         preparazione: [
           "Una porzione pratica da portare con te."
@@ -1688,14 +1691,19 @@ const DIETE = {
    L'utente può cambiare ogni voce dalla schermata Settimana.
    Ordine giorni: 0=lunedì ... 6=domenica
    ============================================================ */
+/* Ogni pasto ha due scelte indipendenti: { marco, caterina }.
+   Di default partono uguali (ricette senza glutine, adatte a entrambi);
+   poi Marco e Caterina possono cambiare il proprio piatto separatamente
+   dalla schermata Settimana. */
+function _mc(id) { return { marco: id, caterina: id }; }
 const MENU_SETTIMANALE_DEFAULT = [
-  { giorno: "Lunedì",    colazione: "m-colazione-riso-frutta",   pranzo: "m-riso-pollo-zucchine",  cena: "m-pesce-gallette",          spuntino: "m-spuntino-yogurt" },
-  { giorno: "Martedì",   colazione: "m-colazione-mais-frutta",   pranzo: "m-quinoa-ceci",          cena: "m-polenta-formaggio",       spuntino: "m-spuntino-frutta-sec" },
-  { giorno: "Mercoledì", colazione: "m-colazione-biscotti-gf",   pranzo: "m-pasta-mais-tonno",     cena: "m-uova-verdure-gallette",   spuntino: "m-spuntino-fondente" },
-  { giorno: "Giovedì",   colazione: "m-colazione-riso-frutta",   pranzo: "m-riso-manzo-verdure",   cena: "m-polenta-pesce",           spuntino: "m-spuntino-yogurt" },
-  { giorno: "Venerdì",   colazione: "m-colazione-mais-frutta",   pranzo: "m-quinoa-ceci",          cena: "m-pesce-gallette",          spuntino: "m-spuntino-frutta-sec" },
-  { giorno: "Sabato",    colazione: "m-colazione-biscotti-gf",   pranzo: "m-riso-pollo-zucchine",  cena: "m-polenta-formaggio",       spuntino: "m-spuntino-fondente" },
-  { giorno: "Domenica",  colazione: "m-colazione-riso-frutta",   pranzo: "m-pasta-mais-tonno",     cena: "m-uova-verdure-gallette",   spuntino: "m-spuntino-yogurt" }
+  { giorno: "Lunedì",    colazione: _mc("m-colazione-riso-frutta"), pranzo: _mc("m-riso-pollo-zucchine"), cena: _mc("m-pesce-gallette"),        spuntino: _mc("m-spuntino-yogurt") },
+  { giorno: "Martedì",   colazione: _mc("m-colazione-mais-frutta"), pranzo: _mc("m-quinoa-ceci"),         cena: _mc("m-polenta-formaggio"),     spuntino: _mc("m-spuntino-frutta-sec") },
+  { giorno: "Mercoledì", colazione: _mc("m-colazione-biscotti-gf"), pranzo: _mc("m-pasta-mais-tonno"),    cena: _mc("m-uova-verdure-gallette"), spuntino: _mc("m-spuntino-fondente") },
+  { giorno: "Giovedì",   colazione: _mc("m-colazione-riso-frutta"), pranzo: _mc("m-riso-manzo-verdure"),  cena: _mc("m-polenta-pesce"),         spuntino: _mc("m-spuntino-yogurt") },
+  { giorno: "Venerdì",   colazione: _mc("m-colazione-mais-frutta"), pranzo: _mc("m-quinoa-ceci"),         cena: _mc("m-pesce-gallette"),        spuntino: _mc("m-spuntino-frutta-sec") },
+  { giorno: "Sabato",    colazione: _mc("m-colazione-biscotti-gf"), pranzo: _mc("m-riso-pollo-zucchine"), cena: _mc("m-polenta-formaggio"),     spuntino: _mc("m-spuntino-fondente") },
+  { giorno: "Domenica",  colazione: _mc("m-colazione-riso-frutta"), pranzo: _mc("m-pasta-mais-tonno"),    cena: _mc("m-uova-verdure-gallette"), spuntino: _mc("m-spuntino-yogurt") }
 ];
 
 /* ============================================================

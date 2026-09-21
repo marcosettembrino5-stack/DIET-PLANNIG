@@ -46,6 +46,14 @@
         typeof MENU_SETTIMANALE_DEFAULT !== "undefined" ? MENU_SETTIMANALE_DEFAULT : []
       ));
     }
+    // Migrazione dal vecchio formato (stringa per pasto) al nuovo { marco, caterina }
+    state.weekMenu.forEach((day) => {
+      ["colazione", "pranzo", "cena", "spuntino"].forEach((slot) => {
+        const v = day[slot];
+        if (typeof v === "string") day[slot] = { marco: v, caterina: v };
+        else if (v && typeof v === "object" && !("marco" in v)) day[slot] = { marco: null, caterina: null };
+      });
+    });
     return state.weekMenu;
   }
   // Dati del giorno selezionato { meals:{}, habits:{}, extras:[], waterMl:0 }
@@ -737,35 +745,42 @@
       const card = el("div", "week-day" + (dayIdx === oggiIdx ? " today" : ""));
       const head = el("div", "week-day-head");
       head.appendChild(el("span", null, day.giorno + (dayIdx === oggiIdx ? " · oggi" : "")));
-      let kcalDay = 0;
-      WEEK_SLOTS.forEach((s) => { const r = recipeById(day[s.key]); if (r && r.kcal) kcalDay += r.kcal; });
-      head.appendChild(el("span", "wd-kcal", kcalDay > 0 ? kcalDay + " kcal" : ""));
+      // kcal medie del giorno (media Marco/Caterina, indicativo)
+      let kcalM = 0, kcalC = 0;
+      WEEK_SLOTS.forEach((s) => {
+        const rm = recipeById(day[s.key] && day[s.key].marco);
+        const rc = recipeById(day[s.key] && day[s.key].caterina);
+        if (rm && rm.kcal) kcalM += rm.kcal;
+        if (rc && rc.kcal) kcalC += rc.kcal;
+      });
+      head.appendChild(el("span", "wd-kcal", (kcalM || kcalC) ? ("👨 " + kcalM + " · 👩 " + kcalC + " kcal") : ""));
       card.appendChild(head);
 
       WEEK_SLOTS.forEach((slot) => {
-        const r = recipeById(day[slot.key]);
-        const row = el("div", "week-meal" + (r ? "" : " empty"));
-        row.appendChild(el("div", "wm-icon", (r && r.icona) || slot.icona));
-        const info = el("div", "wm-info");
-        info.appendChild(el("div", "wm-slot", slot.label));
-        info.appendChild(el("div", "wm-name", r ? r.nome : "— tocca per scegliere"));
-        if (r) {
-          const hasVar = recipeHasVariant(r);
-          const meta = el("div", "wm-portions");
-          meta.innerHTML = (r.kcal ? r.kcal + " kcal · " : "") +
-            (hasVar ? "<span class='wm-var'>👨 / 👩 varianti</span>" : "uguale per entrambi");
-          info.appendChild(meta);
-        }
-        row.appendChild(info);
-        row.appendChild(el("div", "wm-arrow", "›"));
-        // tocco = apri il dettaglio a due colonne (Marco/Caterina)
-        if (r) row.addEventListener("click", () => openSharedRecipe(r, dayIdx, slot));
-        else row.addEventListener("click", () => openWeekPicker(dayIdx, slot));
-        card.appendChild(row);
+        // blocco pasto con etichetta + due righe persona
+        const block = el("div", "week-meal-block");
+        block.appendChild(el("div", "wm-blocklabel", (slot.icona || "") + " " + slot.label));
+        block.appendChild(buildPersonMealRow(dayIdx, slot, "marco", "👨 Marco", day[slot.key].marco));
+        block.appendChild(buildPersonMealRow(dayIdx, slot, "caterina", "👩 Caterina", day[slot.key].caterina));
+        card.appendChild(block);
       });
 
       cont.appendChild(card);
     });
+  }
+
+  // Riga di un pasto per una persona (piatto proprio, toccabile per cambiare)
+  function buildPersonMealRow(dayIdx, slot, persona, etichetta, recipeId) {
+    const r = recipeById(recipeId);
+    const row = el("div", "week-person-row " + persona + (r ? "" : " empty"));
+    row.appendChild(el("div", "wpr-who", etichetta));
+    const info = el("div", "wpr-info");
+    info.appendChild(el("div", "wpr-name", r ? ((r.icona || "🍽️") + " " + r.nome) : "— tocca per scegliere"));
+    if (r && r.kcal) info.appendChild(el("div", "wpr-kcal", r.kcal + " kcal"));
+    row.appendChild(info);
+    row.appendChild(el("div", "wm-arrow", "›"));
+    row.addEventListener("click", () => openWeekPicker(dayIdx, slot, persona));
+    return row;
   }
 
   // Verifica se una ricetta ha almeno un ingrediente con variante per Caterina
@@ -836,27 +851,45 @@
     $("#recipeModal").classList.remove("hidden");
   }
 
-  // Sostituzione ricetta di uno slot: riusa la modale picker
-  function openWeekPicker(dayIdx, slot) {
-    // ricette candidate: dello stesso tipo, senza glutine (sicure per entrambi)
+  // Sostituzione ricetta di uno slot PER UNA PERSONA (marco/caterina).
+  // Marco: solo ricette senza glutine. Caterina: tutte le sue ricette del tipo.
+  function openWeekPicker(dayIdx, slot, persona) {
+    persona = persona || "marco";
     const candidates = [];
-    Object.keys(DIETE).forEach((pk) => {
-      (DIETE[pk].ricette || []).forEach((r) => {
-        if (r.tipo === slot.key && r.senzaGlutine) candidates.push(r);
+    const seen = new Set();
+    if (persona === "marco") {
+      // solo ricette senza glutine (da qualsiasi profilo), dello stesso tipo
+      Object.keys(DIETE).forEach((pk) => {
+        (DIETE[pk].ricette || []).forEach((r) => {
+          if (r.tipo === slot.key && r.senzaGlutine && !seen.has(r.id)) { seen.add(r.id); candidates.push(r); }
+        });
       });
-    });
-    const currentId = weekMenu()[dayIdx][slot.key];
+    } else {
+      // Caterina: le sue ricette del tipo + le senza glutine (che può comunque mangiare)
+      (DIETE.caterina.ricette || []).forEach((r) => {
+        if (r.tipo === slot.key && !seen.has(r.id)) { seen.add(r.id); candidates.push(r); }
+      });
+      (DIETE.marco.ricette || []).forEach((r) => {
+        if (r.tipo === slot.key && r.senzaGlutine && !seen.has(r.id)) { seen.add(r.id); candidates.push(r); }
+      });
+    }
 
-    $("#pickerTitle").textContent = slot.label + " · " + weekMenu()[dayIdx].giorno;
-    $("#pickerInstr").textContent = "Scegli una ricetta senza glutine (adatta a entrambi).";
-    $("#pickerNote").textContent = "";
+    const currentId = weekMenu()[dayIdx][slot.key][persona];
+    const nomePersona = persona === "marco" ? "Marco" : "Caterina";
+
+    $("#pickerTitle").textContent = slot.label + " · " + nomePersona;
+    $("#pickerInstr").textContent = persona === "marco"
+      ? "Solo ricette senza glutine (adatte a Marco)."
+      : "Ricette per Caterina (anche con glutine, che lei può mangiare).";
+    $("#pickerNote").textContent = weekMenu()[dayIdx].giorno;
     const box = $("#pickerOptions");
     box.innerHTML = "";
     candidates.forEach((r) => {
+      const tag = r.senzaGlutine ? " · SG" : "";
       const b = el("button", "picker-opt" + (r.id === currentId ? " selected" : ""),
-        (r.icona || "🍽️") + " " + r.nome + " · " + (r.kcal || "?") + " kcal");
+        (r.icona || "🍽️") + " " + r.nome + " · " + (r.kcal || "?") + " kcal" + tag);
       b.addEventListener("click", () => {
-        weekMenu()[dayIdx][slot.key] = r.id;
+        weekMenu()[dayIdx][slot.key][persona] = r.id;
         saveState();
         closePicker();
         renderWeek();
@@ -864,44 +897,40 @@
       box.appendChild(b);
     });
     if (!candidates.length) {
-      box.appendChild(el("div", "section-hint", "Nessuna ricetta senza glutine per questo pasto."));
+      box.appendChild(el("div", "section-hint", "Nessuna ricetta per questo pasto."));
     }
     $("#pickerModal").classList.remove("hidden");
   }
 
-  // Genera la lista della spesa dal menù settimanale
+  // Genera la lista della spesa dal menù settimanale.
+  // I piatti di Marco vanno nella sua lista, quelli di Caterina nella sua:
+  // la spesa condivisa poi somma dove coincidono e distingue dove diversi.
   function generateWeekShopping() {
     const menu = weekMenu();
-    // raccogli gli id ricetta unici della settimana
-    const ids = [];
-    menu.forEach((day) => {
-      WEEK_SLOTS.forEach((s) => { if (day[s.key] && !ids.includes(day[s.key])) ids.push(day[s.key]); });
-    });
-    if (!ids.length) { alert("Il menù è vuoto."); return; }
 
-    // le ricette del menù stanno nei profili: le metto nella lista del profilo che le possiede
-    // e attivo lo scope "condivisa" per vederle aggregate.
+    // svuota le liste dei due profili
     ["marco", "caterina"].forEach((pk) => {
-      if (state.profiles[pk] && state.profiles[pk].shopping) {
-        state.profiles[pk].shopping.recipes = [];
-        state.profiles[pk].shopping.checked = {};
-      }
+      profDataFor(pk);
+      state.profiles[pk].shopping.recipes = [];
+      state.profiles[pk].shopping.checked = {};
     });
-    ids.forEach((id) => {
-      // trova in quale profilo sta la ricetta
-      let owner = null;
-      for (const pk of Object.keys(DIETE)) {
-        if ((DIETE[pk].ricette || []).some((r) => r.id === id)) { owner = pk; break; }
-      }
-      if (!owner) return;
-      if (!state.profiles[owner]) profDataFor(owner);
-      const shop = state.profiles[owner].shopping;
-      if (!shop.recipes.includes(id)) shop.recipes.push(id);
+
+    let count = 0;
+    menu.forEach((day) => {
+      WEEK_SLOTS.forEach((s) => {
+        const cell = day[s.key] || {};
+        [["marco", cell.marco], ["caterina", cell.caterina]].forEach(([pk, id]) => {
+          if (!id) return;
+          const shop = state.profiles[pk].shopping;
+          if (!shop.recipes.includes(id)) { shop.recipes.push(id); count++; }
+        });
+      });
     });
+    if (!count) { alert("Il menù è vuoto."); return; }
+
     spesaScope = "condivisa";
     saveState();
     renderSpesa();
-    // aggiorna i chip scope e vai al tab spesa
     document.querySelectorAll("#spesaScope .scope-chip").forEach((x) => {
       x.classList.toggle("active", x.dataset.scope === "condivisa");
     });
@@ -936,9 +965,17 @@
     return profData().shopping.recipes.map((id) => ({ profileKey: currentProfile, recipeId: id }));
   }
 
+  // Cerca la ricetta per id: prima nel profilo indicato, poi in tutti i profili
+  // (gli id ricetta sono unici; il menù di Caterina può puntare a ricette di Marco).
   function findRecipe(profileKey, recipeId) {
     const diet = DIETE[profileKey];
-    return diet && (diet.ricette || []).find((x) => x.id === recipeId);
+    let r = diet && (diet.ricette || []).find((x) => x.id === recipeId);
+    if (r) return r;
+    for (const pk of Object.keys(DIETE)) {
+      r = (DIETE[pk].ricette || []).find((x) => x.id === recipeId);
+      if (r) return r;
+    }
+    return null;
   }
 
   function renderSpesa() {
@@ -996,7 +1033,9 @@
       row.appendChild(el("div", "si-check", "✓"));
       const nameWrap = el("div", "si-name");
       nameWrap.appendChild(el("span", null, item.nome));
-      if (item.gf) nameWrap.appendChild(el("span", "si-tag", "senza glutine"));
+      if (item.who === "Marco") nameWrap.appendChild(el("span", "si-who marco", "👨 Marco"));
+      else if (item.who === "Caterina") nameWrap.appendChild(el("span", "si-who cate", "👩 Caterina"));
+      else if (item.gf) nameWrap.appendChild(el("span", "si-tag", "senza glutine"));
       row.appendChild(nameWrap);
       row.appendChild(el("div", "si-qta", item.display));
       row.addEventListener("click", () => {
@@ -1008,37 +1047,50 @@
     });
   }
 
-  // Aggrega ingredienti sommando le quantità con la stessa unità.
-  // Accetta una lista di { profileKey, recipeId }.
+  // Aggrega ingredienti. Regola (a): stesso alimento (stesso nome) -> quantità
+  // sommate in un'unica riga (di entrambi); alimenti diversi tra Marco e Caterina
+  // -> righe separate etichettate per persona. Ogni ingrediente è taggato con il
+  // profilo da cui proviene (Marco/Caterina) nello scope condiviso.
   function aggregateIngredients(selezione) {
-    const map = {}; // key -> { nome, byUnit, testi, gf }
+    const map = {}; // key -> { nome, byUnit, testi, gf, persone:Set }
+    const condivisa = spesaScope === "condivisa";
+
+    function addEntry(nome, qta, gf, persona) {
+      const key = (nome || "").toLowerCase().trim();
+      if (!map[key]) map[key] = { nome: nome, byUnit: {}, testi: [], gf: false, persone: new Set() };
+      if (gf) map[key].gf = true;
+      if (persona) map[key].persone.add(persona);
+      const parsed = parseQta(qta);
+      if (parsed) map[key].byUnit[parsed.unit] = (map[key].byUnit[parsed.unit] || 0) + parsed.value;
+      else if (qta) map[key].testi.push(qta);
+    }
+
     selezione.forEach((sel) => {
       const r = findRecipe(sel.profileKey, sel.recipeId);
       if (!r) return;
+      const persona = sel.profileKey === "marco" ? "Marco"
+        : sel.profileKey === "caterina" ? "Caterina" : null;
       (r.ingredienti || []).forEach((ing) => {
-        const key = (ing.nome || "").toLowerCase().trim();
-        if (!map[key]) map[key] = { nome: ing.nome, byUnit: {}, testi: [], gf: false };
-        if (r.senzaGlutine) map[key].gf = true;
-        const parsed = parseQta(ing.qta);
-        if (parsed) {
-          map[key].byUnit[parsed.unit] = (map[key].byUnit[parsed.unit] || 0) + parsed.value;
-        } else {
-          map[key].testi.push(ing.qta || "q.b.");
-        }
+        addEntry(ing.nome, ing.qta, r.senzaGlutine, condivisa ? persona : null);
       });
     });
-    // Costruisci output con display leggibile
+
     return Object.keys(map).map((key) => {
       const m = map[key];
       const parts = [];
       Object.keys(m.byUnit).forEach((u) => {
-        const v = Math.round(m.byUnit[u] * 100) / 100;
-        parts.push(u ? (v + " " + u) : String(v));
+        const val = Math.round(m.byUnit[u] * 100) / 100;
+        parts.push(u ? (val + " " + u) : String(val));
       });
-      // aggiungi testi non numerici unici
-      const testiUnici = [...new Set(m.testi)];
-      testiUnici.forEach((t) => { if (t && !/^q\.?b\.?$/i.test(t)) parts.push(t); });
-      return { key, nome: m.nome, display: parts.length ? parts.join(" + ") : "q.b.", gf: m.gf };
+      [...new Set(m.testi)].forEach((t) => { if (t && !/^q\.?b\.?$/i.test(t)) parts.push(t); });
+      // etichetta persona: solo se l'alimento è di uno solo dei due
+      let who = null;
+      if (condivisa) {
+        const hasM = m.persone.has("Marco"), hasC = m.persone.has("Caterina");
+        if (hasM && !hasC) who = "Marco";
+        else if (hasC && !hasM) who = "Caterina";
+      }
+      return { key, nome: m.nome, display: parts.length ? parts.join(" + ") : "q.b.", gf: m.gf, who: who };
     }).sort((a, b) => a.nome.localeCompare(b.nome));
   }
 

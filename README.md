@@ -8,7 +8,7 @@ Web app mobile-first per seguire la dieta personalizzata, con sistema a scambi, 
 2. In alto scegli il profilo (per ora: **Caterina**).
 3. Tab in basso:
    - **📅 Oggi** – spunta i pasti. Per pranzo/cena scegli cereale + secondo + ortaggi (sistema a scambi). Vedi la stima dei cereali giornalieri (max 120 g), il **budget calorie** con le kcal rimaste, e puoi aggiungere **pasti extra** con le calorie prese dalla confezione.
-   - **🗓️ Settimana** – menù condiviso lun-dom (senza glutine, adatto a entrambi). Tocca un piatto per cambiarlo. Pulsante **Genera lista spesa** che popola il carrello con tutte le ricette della settimana.
+   - **🗓️ Settimana** – menù lun-dom con **due scelte indipendenti per pasto** (👨 Marco solo senza glutine · 👩 Caterina anche con glutine), entrambe modificabili con un tocco. Ingredienti sempre **specifici** (frutto fisso, verdure con grammatura). Pulsante **Genera lista spesa** che popola il carrello con i piatti di entrambi: somma le quantità dove il piatto coincide, distingue con etichetta persona dove differisce.
    - **⋯ Altro** – raccoglie Insieme, Statistiche, Peso, Abitudini, Info (per tenere la barra pulita).
    - **👥 Insieme** (dentro Altro) – vista condivisa Marco + Caterina: stesso pasto, porzioni per ciascuno. Gli alimenti non adatti a Marco (senza glutine / allergeni grano e graminacee) sono segnalati con ⚠️ e l'alternativa senza glutine.
    - **📖 Ricette** – ricettario con piatti pronti per ogni pasto: ingredienti, quantità (incluso il sale) e preparazione. **Cerca** per nome o ingrediente, segna le **preferite** con la stella. Tocca una ricetta per applicarla al giorno (compila il pasto e conta le calorie).

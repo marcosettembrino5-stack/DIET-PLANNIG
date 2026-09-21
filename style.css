@@ -743,3 +743,43 @@ html[data-theme="dark"] .sr-col.cate  { background: #2b1b24; }
 .sr-altname { font-size: 0.76rem; color: var(--text-soft); }
 .sr-ing.diff .sr-col.cate .sr-altname { color: #9c3070; font-weight: 600; }
 html[data-theme="dark"] .sr-ing.diff .sr-col.cate .sr-altname { color: #f0a7cf; }
+
+/* Etichetta persona nella lista spesa condivisa */
+.si-who {
+  font-size: 0.66rem; font-weight: 700; padding: 2px 7px;
+  border-radius: 8px; margin-left: 6px; white-space: nowrap;
+}
+.si-who.marco { background: #e3f0fb; color: #1c5a8a; }
+.si-who.cate  { background: #fbe8f2; color: #9c3070; }
+html[data-theme="dark"] .si-who.marco { background: #1a2b3a; color: #8ec5f0; }
+html[data-theme="dark"] .si-who.cate  { background: #34202c; color: #f0a7cf; }
+.si-name { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+
+/* ============================================================
+   SETTIMANA: due scelte indipendenti per pasto (Marco/Caterina)
+   ============================================================ */
+.week-meal-block { border-top: 1px solid var(--border); padding: 8px 12px 10px; }
+.wm-blocklabel {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-soft); font-weight: 700; margin: 2px 4px 6px;
+}
+.week-person-row {
+  display: flex; align-items: center; gap: 10px;
+  border-radius: 10px; padding: 9px 10px; margin-bottom: 6px; cursor: pointer;
+}
+.week-person-row:last-child { margin-bottom: 0; }
+.week-person-row.marco { background: #eaf3fb; }
+.week-person-row.cate,
+.week-person-row.caterina { background: #fbeef5; }
+html[data-theme="dark"] .week-person-row.marco { background: #17242f; }
+html[data-theme="dark"] .week-person-row.caterina { background: #2b1b24; }
+.week-person-row:active { filter: brightness(0.97); }
+.wpr-who { font-size: 0.78rem; font-weight: 700; width: 92px; flex-shrink: 0; }
+.week-person-row.marco .wpr-who { color: #1c5a8a; }
+.week-person-row.caterina .wpr-who { color: #9c3070; }
+html[data-theme="dark"] .week-person-row.marco .wpr-who { color: #8ec5f0; }
+html[data-theme="dark"] .week-person-row.caterina .wpr-who { color: #f0a7cf; }
+.wpr-info { flex: 1; min-width: 0; }
+.wpr-name { font-weight: 600; font-size: 0.9rem; }
+.wpr-kcal { font-size: 0.74rem; color: var(--text-soft); }
+.week-person-row.empty .wpr-name { font-style: italic; color: var(--text-soft); font-weight: 500; }

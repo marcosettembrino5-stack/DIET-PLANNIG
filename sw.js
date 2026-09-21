@@ -5,7 +5,7 @@
    il refresh della cache sui dispositivi.
    ============================================================ */
 
-const CACHE_VERSION = "nutriapp-v3";
+const CACHE_VERSION = "nutriapp-v5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -52,3 +52,4 @@ self.addEventListener("fetch", (event) => {
       .catch(() => caches.match(event.request)) // offline: usa la cache
   );
 });
+
