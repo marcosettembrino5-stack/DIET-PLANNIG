@@ -81,6 +81,17 @@
       </div>
     </section>
 
+    <!-- TAB: SETTIMANA (menù condiviso 7 giorni) -->
+    <section id="tab-settimana" class="tab-panel">
+      <h2 class="section-title">Menù della settimana</h2>
+      <p class="section-hint">Menù condiviso senza glutine (adatto a Marco, con porzioni per Caterina). Tocca un piatto per cambiarlo. Poi genera la lista della spesa.</p>
+      <div class="week-actions">
+        <button id="weekShopBtn" class="btn-primary">🛒 Genera lista spesa</button>
+        <button id="weekResetBtn" class="btn-ghost">Ripristina menù</button>
+      </div>
+      <div id="weekContainer" class="week-container"></div>
+    </section>
+
     <!-- TAB: ABITUDINI -->
     <section id="tab-abitudini" class="tab-panel">
       <h2 class="section-title">Acqua</h2>
@@ -239,14 +250,30 @@
   <!-- NAV IN BASSO -->
   <nav class="bottom-nav">
     <button class="nav-btn active" data-tab="oggi"><span>📅</span>Oggi</button>
-    <button class="nav-btn" data-tab="insieme"><span>👥</span>Insieme</button>
+    <button class="nav-btn" data-tab="settimana"><span>🗓️</span>Settimana</button>
     <button class="nav-btn" data-tab="ricette"><span>📖</span>Ricette</button>
     <button class="nav-btn" data-tab="spesa"><span>🛒</span>Spesa</button>
-    <button class="nav-btn" data-tab="stats"><span>📊</span>Statistiche</button>
-    <button class="nav-btn" data-tab="abitudini"><span>✅</span>Abitudini</button>
-    <button class="nav-btn" data-tab="peso"><span>⚖️</span>Peso</button>
-    <button class="nav-btn" data-tab="info"><span>ℹ️</span>Info</button>
+    <button class="nav-btn" id="moreBtn"><span>⋯</span>Altro</button>
   </nav>
+
+  <!-- MENU "ALTRO" -->
+  <div id="moreModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h3>Altro</h3>
+        <button id="moreClose" class="modal-close" aria-label="Chiudi">✕</button>
+      </div>
+      <div class="more-list">
+        <button class="more-item" data-tab="insieme"><span>👥</span> Insieme</button>
+        <button class="more-item" data-tab="stats"><span>📊</span> Statistiche</button>
+        <button class="more-item" data-tab="peso"><span>⚖️</span> Peso</button>
+        <button class="more-item" data-tab="abitudini"><span>✅</span> Abitudini</button>
+        <button class="more-item" data-tab="info"><span>ℹ️</span> Info</button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODALE SCELTA OPZIONI -->
   <div id="pickerModal" class="modal hidden">

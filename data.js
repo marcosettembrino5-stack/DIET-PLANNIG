@@ -1514,6 +1514,162 @@ const DIETE = {
           "Uno spuntino post-cena goloso ma senza cereali."
         ],
         applica: { scelta: 8 }
+      },
+      {
+        id: "m-riso-manzo-verdure",
+        nome: "Riso con straccetti di manzo e verdure",
+        tipo: "pranzo",
+        icona: "🥩",
+        kcal: 480,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua del riso",
+        ingredienti: [
+          { nome: "Riso", qta: "70 g" },
+          { nome: "Manzo", qta: "120 g" },
+          { nome: "Zucchine e carote", qta: "a volontà" },
+          { nome: "Rosmarino / pepe", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa il riso con un pizzico di sale.",
+          "Salta le verdure a julienne in padella.",
+          "Aggiungi il manzo a straccetti e cuoci pochi minuti, unisci al riso."
+        ],
+        applica: { cereali: 0, secondi: 0, ortaggi: 0 }
+      },
+      {
+        id: "m-polenta-pesce",
+        nome: "Polenta con pesce e verdure",
+        tipo: "cena",
+        icona: "🐟",
+        kcal: 450,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g)",
+        ingredienti: [
+          { nome: "Farina di mais (polenta)", qta: "70 g" },
+          { nome: "Pesce (merluzzo/orata)", qta: "150 g" },
+          { nome: "Cicoria o broccoletti", qta: "a volontà" },
+          { nome: "Prezzemolo", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Prepara la polenta con acqua e un pizzico di sale.",
+          "Cuoci il pesce al vapore o in padella.",
+          "Servi con le verdure saltate e un filo d'olio."
+        ],
+        applica: { cereali: 3, secondi: 3, ortaggi: 0 }
+      },
+      {
+        id: "m-pasta-mais-tonno",
+        nome: "Pasta di mais con tonno e zucchine",
+        tipo: "pranzo",
+        icona: "🍝",
+        kcal: 460,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nell'acqua di cottura",
+        ingredienti: [
+          { nome: "Pasta di mais/riso", qta: "70 g" },
+          { nome: "Tonno al naturale", qta: "120 g" },
+          { nome: "Zucchine", qta: "a volontà" },
+          { nome: "Prezzemolo / peperoncino", qta: "q.b." },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Lessa la pasta senza glutine con un pizzico di sale.",
+          "Salta le zucchine con poco olio.",
+          "Unisci il tonno sgocciolato e manteca con la pasta."
+        ],
+        applica: { cereali: 0, secondi: 3, ortaggi: 0 }
+      },
+      {
+        id: "m-uova-verdure-gallette",
+        nome: "Uova con verdure e gallette",
+        tipo: "cena",
+        icona: "🍳",
+        kcal: 400,
+        senzaGlutine: true,
+        sale: "1 pizzico di sale iodato (circa 1 g) nelle uova",
+        ingredienti: [
+          { nome: "Uova", qta: "2" },
+          { nome: "Gallette di riso/mais", qta: "6" },
+          { nome: "Bietola o cicoria", qta: "a volontà" },
+          { nome: "Olio EVO", qta: "1 cucchiaio (10 g)" }
+        ],
+        preparazione: [
+          "Prepara le uova (sode, in camicia o strapazzate) con un pizzico di sale.",
+          "Salta le verdure in padella.",
+          "Servi con le gallette."
+        ],
+        applica: { cereali: 5, secondi: 2, ortaggi: 0 }
+      },
+      {
+        id: "m-colazione-mais-frutta",
+        nome: "Fiocchi di mais con frutta",
+        tipo: "colazione",
+        icona: "🌽",
+        kcal: 280,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Latte di soia/riso/cocco", qta: "1 bicchiere" },
+          { nome: "Fiocchi di mais", qta: "3 cucchiai" },
+          { nome: "Frutta consentita (banana, uva, mela)", qta: "100 g" }
+        ],
+        preparazione: [
+          "Versa il latte vegetale, aggiungi i fiocchi di mais e la frutta a pezzi."
+        ],
+        applica: { scelta: 1 }
+      },
+      {
+        id: "m-colazione-biscotti-gf",
+        nome: "Biscotti senza glutine e frutta",
+        tipo: "colazione",
+        icona: "🍪",
+        kcal: 260,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Yogurt di soia/cocco senza lattosio", qta: "1 vasetto" },
+          { nome: "Biscotti con farine tollerate (riso/castagna)", qta: "3" },
+          { nome: "Frutta consentita", qta: "100 g" }
+        ],
+        preparazione: [
+          "Accompagna lo yogurt con i biscotti senza glutine e la frutta."
+        ],
+        applica: { scelta: 3 }
+      },
+      {
+        id: "m-spuntino-yogurt",
+        nome: "Yogurt greco senza lattosio",
+        tipo: "spuntino",
+        icona: "🥛",
+        kcal: 90,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Yogurt greco senza lattosio", qta: "1 vasetto" }
+        ],
+        preparazione: [
+          "Gustalo così com'è, eventualmente con un po' di cannella."
+        ],
+        applica: { scelta: 7 }
+      },
+      {
+        id: "m-spuntino-frutta-sec",
+        nome: "Frutta disidratata e semi",
+        tipo: "spuntino",
+        icona: "🥜",
+        kcal: 120,
+        senzaGlutine: true,
+        sale: "Non serve sale",
+        ingredienti: [
+          { nome: "Frutta disidratata (datteri, chips di mela)", qta: "40 g" },
+          { nome: "Semi oleosi", qta: "20 g" }
+        ],
+        preparazione: [
+          "Una porzione pratica da portare con te."
+        ],
+        applica: { scelta: 10 }
       }
     ]
   }
@@ -1524,3 +1680,20 @@ const DIETE = {
      --------------------------------------------------------- */
 
 };
+
+/* ============================================================
+   MENÙ SETTIMANALE CONDIVISO (default)
+   Basato sulle ricette senza glutine (chiavi -> id ricetta di Marco).
+   Adatto a Marco; per Caterina valgono le sue porzioni.
+   L'utente può cambiare ogni voce dalla schermata Settimana.
+   Ordine giorni: 0=lunedì ... 6=domenica
+   ============================================================ */
+const MENU_SETTIMANALE_DEFAULT = [
+  { giorno: "Lunedì",    colazione: "m-colazione-riso-frutta",   pranzo: "m-riso-pollo-zucchine",  cena: "m-pesce-gallette",          spuntino: "m-spuntino-yogurt" },
+  { giorno: "Martedì",   colazione: "m-colazione-mais-frutta",   pranzo: "m-quinoa-ceci",          cena: "m-polenta-formaggio",       spuntino: "m-spuntino-frutta-sec" },
+  { giorno: "Mercoledì", colazione: "m-colazione-biscotti-gf",   pranzo: "m-pasta-mais-tonno",     cena: "m-uova-verdure-gallette",   spuntino: "m-spuntino-fondente" },
+  { giorno: "Giovedì",   colazione: "m-colazione-riso-frutta",   pranzo: "m-riso-manzo-verdure",   cena: "m-polenta-pesce",           spuntino: "m-spuntino-yogurt" },
+  { giorno: "Venerdì",   colazione: "m-colazione-mais-frutta",   pranzo: "m-quinoa-ceci",          cena: "m-pesce-gallette",          spuntino: "m-spuntino-frutta-sec" },
+  { giorno: "Sabato",    colazione: "m-colazione-biscotti-gf",   pranzo: "m-riso-pollo-zucchine",  cena: "m-polenta-formaggio",       spuntino: "m-spuntino-fondente" },
+  { giorno: "Domenica",  colazione: "m-colazione-riso-frutta",   pranzo: "m-pasta-mais-tonno",     cena: "m-uova-verdure-gallette",   spuntino: "m-spuntino-yogurt" }
+];

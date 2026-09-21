@@ -5,7 +5,7 @@
    il refresh della cache sui dispositivi.
    ============================================================ */
 
-const CACHE_VERSION = "nutriapp-v1";
+const CACHE_VERSION = "nutriapp-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -34,23 +34,21 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch: strategia "cache first, poi rete" per gli asset dell'app.
-// Le richieste non-GET passano direttamente alla rete.
+// Fetch: strategia "network first, poi cache".
+// Così quando c'è rete si vede SEMPRE l'ultima versione (niente app "vecchia"),
+// e offline si usa la copia in cache. Le richieste non-GET vanno dirette alla rete.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
-        .then((resp) => {
-          // salva in cache una copia delle risposte valide same-origin
-          if (resp && resp.status === 200 && resp.type === "basic") {
-            const copy = resp.clone();
-            caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, copy));
-          }
-          return resp;
-        })
-        .catch(() => cached); // offline e non in cache: fallisce silenziosamente
-    })
+    fetch(event.request)
+      .then((resp) => {
+        // aggiorna la cache con l'ultima versione (solo same-origin valide)
+        if (resp && resp.status === 200 && resp.type === "basic") {
+          const copy = resp.clone();
+          caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, copy));
+        }
+        return resp;
+      })
+      .catch(() => caches.match(event.request)) // offline: usa la cache
   );
 });

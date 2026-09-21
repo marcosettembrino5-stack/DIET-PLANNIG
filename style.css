@@ -662,3 +662,45 @@ html[data-theme="dark"] .portion.warn { background: #3a2529; border-color: #6b3b
   font-size: 0.68rem; padding: 2px 6px; border-radius: 8px;
   background: var(--green-light); color: var(--green-dark); margin-left: 6px;
 }
+
+/* ============================================================
+   MENU "ALTRO" + SETTIMANA
+   ============================================================ */
+
+.more-list { display: flex; flex-direction: column; gap: 8px; }
+.more-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 15px 16px; font-size: 1rem; font-weight: 600;
+  color: var(--text); cursor: pointer; text-align: left;
+}
+.more-item span { font-size: 1.3rem; }
+.more-item:active { background: var(--green-light); }
+
+/* Settimana */
+.week-actions { display: flex; gap: 8px; margin-bottom: 14px; }
+.week-actions .btn-primary { flex: 1; padding: 12px; }
+.week-container { display: flex; flex-direction: column; gap: 14px; }
+.week-day {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.week-day.today { border: 2px solid var(--green); }
+.week-day-head {
+  padding: 11px 16px; background: var(--green-light);
+  font-weight: 700; color: var(--green-dark); text-transform: capitalize;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.week-day-head .wd-kcal { font-size: 0.78rem; font-weight: 600; color: var(--text-soft); }
+.week-meal {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; border-top: 1px solid var(--border); cursor: pointer;
+}
+.week-meal:active { background: var(--green-light); }
+.week-meal .wm-icon { font-size: 1.2rem; width: 30px; text-align: center; }
+.week-meal .wm-info { flex: 1; min-width: 0; }
+.week-meal .wm-slot { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-soft); }
+.week-meal .wm-name { font-weight: 600; font-size: 0.92rem; }
+.week-meal .wm-portions { font-size: 0.76rem; color: var(--text-soft); }
+.week-meal .wm-arrow { color: var(--text-soft); font-size: 1.1rem; }
+.week-meal.empty .wm-name { color: var(--text-soft); font-weight: 500; font-style: italic; }

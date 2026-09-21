@@ -39,6 +39,15 @@
     if (!p.shopping) p.shopping = { recipes: [], checked: {} }; // lista spesa
     return p;
   }
+  // Menù settimanale condiviso (unico per l'app, non per profilo)
+  function weekMenu() {
+    if (!state.weekMenu) {
+      state.weekMenu = JSON.parse(JSON.stringify(
+        typeof MENU_SETTIMANALE_DEFAULT !== "undefined" ? MENU_SETTIMANALE_DEFAULT : []
+      ));
+    }
+    return state.weekMenu;
+  }
   // Dati del giorno selezionato { meals:{}, habits:{}, extras:[], waterMl:0 }
   function dayData() {
     const p = profData();
@@ -114,6 +123,7 @@
     renderRecipes();
     renderSpesa();
     renderShared();
+    renderWeek();
     renderReminderSettings();
     updateProgress();
   }
@@ -689,6 +699,146 @@
 
     row.appendChild(portions);
     return row;
+  }
+
+  // ============================================================
+  //  MENÙ SETTIMANALE
+  // ============================================================
+  const WEEK_SLOTS = [
+    { key: "colazione", label: "Colazione", icona: "☕" },
+    { key: "pranzo", label: "Pranzo", icona: "🍽️" },
+    { key: "cena", label: "Cena", icona: "🌙" },
+    { key: "spuntino", label: "Spuntino", icona: "🍫" }
+  ];
+
+  // Trova una ricetta per id cercando in tutti i profili (il menù usa quelle di Marco/GF)
+  function recipeById(id) {
+    for (const pk of Object.keys(DIETE)) {
+      const r = (DIETE[pk].ricette || []).find((x) => x.id === id);
+      if (r) return r;
+    }
+    return null;
+  }
+
+  // indice del giorno di oggi (0=lunedì ... 6=domenica)
+  function todayWeekIndex() {
+    const g = parseKey(todayKey()).getDay(); // 0=domenica
+    return g === 0 ? 6 : g - 1;
+  }
+
+  function renderWeek() {
+    const cont = $("#weekContainer");
+    if (!cont) return;
+    cont.innerHTML = "";
+    const menu = weekMenu();
+    const oggiIdx = todayWeekIndex();
+
+    menu.forEach((day, dayIdx) => {
+      const card = el("div", "week-day" + (dayIdx === oggiIdx ? " today" : ""));
+      const head = el("div", "week-day-head");
+      head.appendChild(el("span", null, day.giorno + (dayIdx === oggiIdx ? " · oggi" : "")));
+      // somma kcal del giorno (stima ricette)
+      let kcalDay = 0;
+      WEEK_SLOTS.forEach((s) => { const r = recipeById(day[s.key]); if (r && r.kcal) kcalDay += r.kcal; });
+      head.appendChild(el("span", "wd-kcal", kcalDay > 0 ? kcalDay + " kcal" : ""));
+      card.appendChild(head);
+
+      WEEK_SLOTS.forEach((slot) => {
+        const r = recipeById(day[slot.key]);
+        const row = el("div", "week-meal" + (r ? "" : " empty"));
+        row.appendChild(el("div", "wm-icon", (r && r.icona) || slot.icona));
+        const info = el("div", "wm-info");
+        info.appendChild(el("div", "wm-slot", slot.label));
+        info.appendChild(el("div", "wm-name", r ? r.nome : "— tocca per scegliere"));
+        if (r && r.kcal) info.appendChild(el("div", "wm-portions", r.kcal + " kcal · senza glutine"));
+        row.appendChild(info);
+        row.appendChild(el("div", "wm-arrow", "›"));
+        row.addEventListener("click", () => openWeekPicker(dayIdx, slot));
+        card.appendChild(row);
+      });
+
+      cont.appendChild(card);
+    });
+  }
+
+  // Sostituzione ricetta di uno slot: riusa la modale picker
+  function openWeekPicker(dayIdx, slot) {
+    // ricette candidate: dello stesso tipo, senza glutine (sicure per entrambi)
+    const candidates = [];
+    Object.keys(DIETE).forEach((pk) => {
+      (DIETE[pk].ricette || []).forEach((r) => {
+        if (r.tipo === slot.key && r.senzaGlutine) candidates.push(r);
+      });
+    });
+    const currentId = weekMenu()[dayIdx][slot.key];
+
+    $("#pickerTitle").textContent = slot.label + " · " + weekMenu()[dayIdx].giorno;
+    $("#pickerInstr").textContent = "Scegli una ricetta senza glutine (adatta a entrambi).";
+    $("#pickerNote").textContent = "";
+    const box = $("#pickerOptions");
+    box.innerHTML = "";
+    candidates.forEach((r) => {
+      const b = el("button", "picker-opt" + (r.id === currentId ? " selected" : ""),
+        (r.icona || "🍽️") + " " + r.nome + " · " + (r.kcal || "?") + " kcal");
+      b.addEventListener("click", () => {
+        weekMenu()[dayIdx][slot.key] = r.id;
+        saveState();
+        closePicker();
+        renderWeek();
+      });
+      box.appendChild(b);
+    });
+    if (!candidates.length) {
+      box.appendChild(el("div", "section-hint", "Nessuna ricetta senza glutine per questo pasto."));
+    }
+    $("#pickerModal").classList.remove("hidden");
+  }
+
+  // Genera la lista della spesa dal menù settimanale
+  function generateWeekShopping() {
+    const menu = weekMenu();
+    // raccogli gli id ricetta unici della settimana
+    const ids = [];
+    menu.forEach((day) => {
+      WEEK_SLOTS.forEach((s) => { if (day[s.key] && !ids.includes(day[s.key])) ids.push(day[s.key]); });
+    });
+    if (!ids.length) { alert("Il menù è vuoto."); return; }
+
+    // le ricette del menù stanno nei profili: le metto nella lista del profilo che le possiede
+    // e attivo lo scope "condivisa" per vederle aggregate.
+    ["marco", "caterina"].forEach((pk) => {
+      if (state.profiles[pk] && state.profiles[pk].shopping) {
+        state.profiles[pk].shopping.recipes = [];
+        state.profiles[pk].shopping.checked = {};
+      }
+    });
+    ids.forEach((id) => {
+      // trova in quale profilo sta la ricetta
+      let owner = null;
+      for (const pk of Object.keys(DIETE)) {
+        if ((DIETE[pk].ricette || []).some((r) => r.id === id)) { owner = pk; break; }
+      }
+      if (!owner) return;
+      if (!state.profiles[owner]) profDataFor(owner);
+      const shop = state.profiles[owner].shopping;
+      if (!shop.recipes.includes(id)) shop.recipes.push(id);
+    });
+    spesaScope = "condivisa";
+    saveState();
+    renderSpesa();
+    // aggiorna i chip scope e vai al tab spesa
+    document.querySelectorAll("#spesaScope .scope-chip").forEach((x) => {
+      x.classList.toggle("active", x.dataset.scope === "condivisa");
+    });
+    switchTab("spesa");
+  }
+
+  // Assicura l'esistenza del contenitore dati per un profilo qualsiasi
+  function profDataFor(pk) {
+    if (!state.profiles[pk]) state.profiles[pk] = { days: {}, weights: [], freeMealDates: [], favorites: [], shopping: { recipes: [], checked: {} } };
+    const p = state.profiles[pk];
+    if (!p.shopping) p.shopping = { recipes: [], checked: {} };
+    return p;
   }
 
   // ============================================================
@@ -1429,6 +1579,14 @@
     if (tab === "peso") renderWeight();  // ridisegna il canvas quando visibile
     if (tab === "stats") renderStats();  // calcola le statistiche all'apertura
     if (tab === "insieme") renderShared();
+    if (tab === "settimana") renderWeek();
+    // chiudi il menu "Altro" se aperto
+    const more = $("#moreModal");
+    if (more) more.classList.add("hidden");
+    // evidenzia "Altro" nella nav se il tab attivo è uno di quelli nel menu
+    const inMore = ["insieme", "stats", "peso", "abitudini", "info"].includes(tab);
+    const moreBtn = $("#moreBtn");
+    if (moreBtn) moreBtn.classList.toggle("active", inMore);
     window.scrollTo(0, 0);
   }
 
@@ -1454,7 +1612,27 @@
     });
 
     document.querySelectorAll(".nav-btn").forEach((b) => {
+      if (b.id === "moreBtn") return; // gestito a parte
       b.addEventListener("click", () => switchTab(b.dataset.tab));
+    });
+
+    // Menu "Altro"
+    $("#moreBtn").addEventListener("click", () => $("#moreModal").classList.remove("hidden"));
+    $("#moreClose").addEventListener("click", () => $("#moreModal").classList.add("hidden"));
+    $("#moreModal .modal-backdrop").addEventListener("click", () => $("#moreModal").classList.add("hidden"));
+    document.querySelectorAll(".more-item").forEach((b) => {
+      b.addEventListener("click", () => switchTab(b.dataset.tab));
+    });
+
+    // Settimana
+    $("#weekShopBtn").addEventListener("click", generateWeekShopping);
+    $("#weekResetBtn").addEventListener("click", () => {
+      if (!confirm("Ripristinare il menù settimanale predefinito?")) return;
+      state.weekMenu = JSON.parse(JSON.stringify(
+        typeof MENU_SETTIMANALE_DEFAULT !== "undefined" ? MENU_SETTIMANALE_DEFAULT : []
+      ));
+      saveState();
+      renderWeek();
     });
 
     $("#weightAddBtn").addEventListener("click", addWeight);
