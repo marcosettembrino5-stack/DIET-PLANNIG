@@ -745,15 +745,11 @@
       const card = el("div", "week-day" + (dayIdx === oggiIdx ? " today" : ""));
       const head = el("div", "week-day-head");
       head.appendChild(el("span", null, day.giorno + (dayIdx === oggiIdx ? " · oggi" : "")));
-      // kcal medie del giorno (media Marco/Caterina, indicativo)
-      let kcalM = 0, kcalC = 0;
-      WEEK_SLOTS.forEach((s) => {
-        const rm = recipeById(day[s.key] && day[s.key].marco);
-        const rc = recipeById(day[s.key] && day[s.key].caterina);
-        if (rm && rm.kcal) kcalM += rm.kcal;
-        if (rc && rc.kcal) kcalC += rc.kcal;
-      });
-      head.appendChild(el("span", "wd-kcal", (kcalM || kcalC) ? ("👨 " + kcalM + " · 👩 " + kcalC + " kcal") : ""));
+      // Budget giornaliero di ciascuno (obiettivo, non somma dei piatti):
+      // Marco e Caterina hanno kcal/die diverse.
+      const budgetM = (DIETE.marco && typeof DIETE.marco.kcal === "number") ? DIETE.marco.kcal : null;
+      const budgetC = (DIETE.caterina && typeof DIETE.caterina.kcal === "number") ? DIETE.caterina.kcal : null;
+      head.appendChild(el("span", "wd-kcal", (budgetM || budgetC) ? ("👨 " + budgetM + " · 👩 " + budgetC + " kcal/die") : ""));
       card.appendChild(head);
 
       WEEK_SLOTS.forEach((slot) => {
